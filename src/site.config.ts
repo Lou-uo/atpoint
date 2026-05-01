@@ -3,7 +3,7 @@ import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } fro
 export const theme: ThemeUserConfig = {
   // === Basic configuration ===
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: "AtPoint's Blog",
+  title: "BtPoint's Blog",
   /** Will be used in index page & copyright declaration */
   author: '安汀',
   author_en: '安汀',
