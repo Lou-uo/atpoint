@@ -22,8 +22,9 @@ interface Props {
     links: {
       type: string
       href: string
+      label?: string
     }[]
-    status: 'published' | 'accepted' | 'under-review' | 'preprint'
+    status: 'published' | 'accepted' | 'under-review' | 'preprint' | 'writing'
     citations?: number
   }>
   groupByYear?: boolean
