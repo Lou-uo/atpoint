@@ -14,22 +14,22 @@ const headings = [
 
 const distributions = [
   {
-    title: '镜像站 1',
-    url: 'example.com',
+    title: 'Vercel',
+    url: 'https://atpoint.vercel.app/',
     platform: 'Vercel'
   },
   {
-    title: '镜像站 2',
-    url: 'blog.example.com',
-    platform: 'Vultr'
+    title: 'Cloudflare',
+    url: 'https://atpoint.pages.dev/',
+    platform: 'cloudflare'
   }
 ]
 ---
 
 <PageLayout title='About' {headings} info='/about'>
-  <p>你的职业 / <Spoiler>关于你的一些冷知识</Spoiler></p>
+  <p>学生 / <Spoiler>爱喵人😽</Spoiler></p>
   <p>
-    在这里写下你的个人简介。你可以介绍你的教育背景、研究方向、工作经历或者兴趣爱好。
+    我是「安汀」，一名来自东北大学(秦皇岛)的物联网工程专业24级在读生。
   </p>
   <Button title='赞助我' class='w-fit' href='/projects#sponsorship' style='ahead' />
   <h2 id='distribution'>网页分发<a class='anchor' href='#distribution'>#</a></h2>
@@ -37,7 +37,7 @@ const distributions = [
     为了提供更好的访问体验和可靠性，本站在多个平台进行了部署，您可以选择合适的镜像站点进行访问：
   </p>
   <DistributionSection class='mb-8 mt-6' {distributions} />
-  <p>如果您遇到访问问题，建议尝试其他镜像站点。所有站点内容保持同步更新。</p>
+  <p>如果您遇到访问问题，建议尝试其他镜像站点。所有站点内容不一定会同步更新。</p>
   <h2 id='tools'>工具<a class='anchor' href='#tools'>#</a></h2>
   <ToolSection
     class='mb-5'
@@ -62,10 +62,10 @@ const distributions = [
         icon: import('@/assets/tools/chrome.svg?raw')
       },
       {
-        name: 'Ubuntu',
-        description: 'Linux Distribution',
-        href: 'https://ubuntu.com',
-        icon: import('@/assets/tools/ubuntu.svg?raw')
+        name: 'Claude',
+        description: 'AI-powered Code Editor',
+        href: 'https://claude.ai',
+        icon: import('@/assets/tools/claude.svg?raw')
       }
     ]}
   />
