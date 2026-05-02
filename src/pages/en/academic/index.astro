@@ -20,16 +20,16 @@ const headings = [
 <PageLayout title='Academic' {headings} info={{ slug: '/academic', hideComment: true }}>
   <h2 id='about-me'>About Me<a class='anchor' href='#about-me'>#</a></h2>
   <p>
-    Introduce your academic background here. For example: I am an undergraduate/graduate student at [University Name], currently interning or studying at [Lab Name], supervised by Professor [Professor Name]. My research interest is [Research Interest].
+    I am a sophomore student at the School of <a href="https://jsjytx.neuq.edu.cn/" target="_blank" rel="noopener noreferrer">Computer and Communication Engineering</a>, <a href="https://www.neuq.edu.cn/" target="_blank" rel="noopener noreferrer">Northeastern University (Qinhuangdao)</a>. Currently, I am working as a Research Assistant at <a href="https://www.nju-link.com/en/" target="_blank" rel="noopener noreferrer">NJU-LINK Lab</a>, supervised by Professor <a href="https://yuxiangren.github.io/" target="_blank" rel="noopener noreferrer">Yuxiang Ren</a>, with a research focus on Agent.
   </p>
 
-  <p>My research philosophy: Write your perspective and attitude towards research here.</p>
+  <p>My research philosophy: Chase the trends of the times.</p>
   <p>
-    You can describe your research motivation, goals, and specific problems you are currently focusing on in detail.
+    Currently, I am researching the deployment and optimization of Agent applications in the field of personalized memory. Prior to this, I have practical experience in projects related to NLP, Diffusion, ESN, and other areas. For detailed information, please follow my blog and <a href="https://github.com/Lou-uo" target="_blank" rel="noopener noreferrer">GitHub</a>.
   </p>
 
   <p>Here is my academic CV, feel free to download it.</p>
-  <Button title='Download CV' class='w-fit' href='#' target='_blank'>
+  <Button title='下载简历' class='w-fit' href='/cv.pdf' target='_blank'>
     <Icon class='size-5' name='download' slot='before' />
   </Button>
   <h2 id='research-interests'>
@@ -39,15 +39,15 @@ const headings = [
     {
       [
         {
-          title: 'Research Interest 1',
-          description: 'Detailed description of this research interest, including keywords, etc.',
+          title: 'Personal Agent',
+          description: 'Research the deployment and optimization of Agent applications in the field of personalized memory.',
           icon: 'ros'
-        },
-        {
-          title: 'Research Interest 2',
-          description: 'Detailed description of this research interest, including keywords, etc.',
-          icon: 'pytorch'
         }
+        // {
+        //   title: '研究方向 2',
+        //   description: '关于该研究方向的详细描述，包括关键词等。',
+        //   icon: 'pytorch'
+        // }
       ].map((interest) => (
         <div class='group relative overflow-hidden rounded-xl border border-border bg-card p-4 transition-all hover:border-foreground/25 hover:shadow-md'>
           <div class='flex items-start gap-4'>
@@ -73,22 +73,37 @@ const headings = [
     publications={[
       {
         title:
-          'Paper Title: Enter your paper title here',
+          'ESN Anomaly Detection',
         authors: [
-          { name: 'Author 1', isEqual: true },
-          { name: 'Author 2', isMe: true },
-          { name: 'Author 3', isCoreContributor: true }
+          { name: 'XX', isEqual: true }
         ],
-        venue: 'Conference or Journal Name (e.g., CVPR, ECCV)',
-        year: '202X',
-        type: 'conference',
+        venue: 'XX',
+        year: '2026',
+        type: 'XX',
         abstract:
-          'Enter the paper abstract here. Briefly introduce the research background, methodology, and main contributions of the paper.',
+          '…………',
+        links: [
+          { type: 'github', href: 'https://github.com/Lou-uo/ESN-for-Anomaly-Dectection', label: 'Code' }
+        ],
+        status: 'writing'
+      },
+      {
+        title:
+          'Agent ???',
+        authors: [
+          { name: 'XX', isEqual: true }
+        ],
+        venue: 'XX',
+        year: '2026',
+        type: 'XX',
+        abstract:
+          '…………',
         links: [
           { type: 'website', href: '#' },
-          { type: 'arxiv', href: '#' }
+          { type: 'arxiv', href: '#' },
+          { type: 'github', href: '#', label: 'Code' }
         ],
-        status: 'published'
+        status: 'writing'
       }
     ]}
   />
@@ -98,13 +113,13 @@ const headings = [
   <ResearchProjectSection
     projects={[
       {
-        title: 'Project Name',
+        title: 'self-made-skills',
         description:
-          'Project Description: Briefly introduce the function and purpose of this open-source project.',
-        category: 'Project Category',
+          'Integrated skills for Claude/Codex, including user profiling based on historical conversations and graduate school recommendation positioning',
+        category: 'agent skill',
         status: 'active',
         links: [
-          { type: 'github', href: '#', label: 'Code' }
+          { type: 'github', href: 'https://github.com/Lou-uo/self-made-skills', label: 'Code' }
         ]
       }
     ]}
