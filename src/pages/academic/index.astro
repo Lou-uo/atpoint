@@ -113,13 +113,33 @@ const headings = [
   <ResearchProjectSection
     projects={[
       {
-        title: 'self-made-skills',
+        title: 'Emotional Classification',
         description:
-          'Integrated skills for Claude/Codex, including user profiling based on historical conversations and graduate school recommendation positioning',
-        category: 'agent skill',
-        status: 'active',
+          'Emotional classification of English film reviews',
+        category: 'TF-IDF + Logistic Regression',
+        status: 'completed',
         links: [
-          { type: 'github', href: 'https://github.com/Lou-uo/self-made-skills', label: 'Code' }
+          { type: 'github', href: 'https://github.com/Lou-uo/natural-language-processing/tree/main/emotional%20classification%20of%20film%20reviews', label: 'Code' }
+        ]
+      },
+      {
+        title: 'Machine Translation',
+        description:
+          'Compare the translation ability of Transformer and Seq2Seq.',
+        category: 'Transformer VS Seq2Seq',
+        status: 'completed',
+        links: [
+          { type: 'github', href: 'https://github.com/Lou-uo/classic-replication/tree/main/Transformer/machine-translation-project', label: 'Code' }
+        ]
+      },
+      {
+        title: 'Style Rendering',
+        description:
+          'Pixel Style Rendering of text-to-image',
+        category: 'Stable Diffusion',
+        status: 'completed',
+        links: [
+          { type: 'modelscope', href: 'https://www.modelscope.cn/models/L13739092955/LoRA-pixel2', label: 'ModelScope' }
         ]
       }
     ]}

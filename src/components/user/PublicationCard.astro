@@ -48,6 +48,7 @@ const linkIconMap: Record<string, { type: 'simple' | 'builtin'; icon: string; co
   model: { type: 'simple', icon: 'huggingface', color: '#FFD21E' },
   huggingface: { type: 'simple', icon: 'huggingface', color: '#FFD21E' },
   hf: { type: 'simple', icon: 'huggingface', color: '#FFD21E' },
+  modelscope: { type: 'builtin', icon: 'modelscope' },
   website: { type: 'builtin', icon: 'earth' },
   site: { type: 'builtin', icon: 'earth' },
   dataset: { type: 'simple', icon: 'huggingface', color: '#FFD21E' },
@@ -181,8 +182,8 @@ const symbolMutedClass = "text-muted-foreground/80 dark:text-slate-400/80";
               ) : (
                 <Icon class='size-3.5 sm:size-4 text-current' name={iconConfig.icon as any} />
               )}
-              <span class="hidden sm:inline">{link.type.toUpperCase()}</span>
-              <span class="sm:hidden">{link.type.charAt(0).toUpperCase() + link.type.slice(1)}</span>
+              <span class="hidden sm:inline">{link.label?.toUpperCase() || link.type.toUpperCase()}</span>
+              <span class="sm:hidden">{link.label || (link.type.charAt(0).toUpperCase() + link.type.slice(1))}</span>
             </a>
           )
         })}

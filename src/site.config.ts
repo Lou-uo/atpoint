@@ -87,7 +87,7 @@ export const theme: ThemeUserConfig = {
     blogStartDate: '2026-04-30',
     /** Domain configuration */
     domains: {
-      main: '',
+      main: 'atpoint.top',
       // githubPages: '',
       // cloudflare: '',
       // friendCircle: '',
