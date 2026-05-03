@@ -1,0 +1,144 @@
+---
+title: "RL学习笔记（1）: 强化学习简介"
+publishDate: 2026-05-03
+updatedDate: 2026-05-03
+description: 强化学习简介
+category: research
+tags:
+  - reinforcement learning
+language: zh
+heroImage:
+  src: src/assets/webp2research/RL-1.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+---
+
+import { Aside } from '@/components/user'
+/* - note - 蓝色信息提示
+   - tip - 紫色技巧提示
+   - caution - 黄色警告提示
+   - danger - 红色危险提示 */
+
+## 什么是强化学习？
+假如你第一次玩一款游戏。
+你不知道地图，不知道敌人会出现在哪里，也不知道怎样才能通关。
+
+于是你开始不断尝试：
+
+- 往左走，掉进陷阱；
+- 往右走，拿到奖励；
+- 某次操作虽然短期吃亏，却帮助你后面成功通关。
+
+经过大量“尝试—反馈—调整”之后，你逐渐学会了如何获得更高的分数。
+
+这个过程，其实就是强化学习（Reinforcement Learning, RL）的核心思想。
+
+---
+
+强化学习是一种让 **智能体（Agent）** 通过与 **动态、开放的环境（Environment）** 不断交互，并根据奖励（Reward）反馈自主学习策略（Policy）的方法。
+
+与传统机器学习不同，强化学习并没有“标准答案”直接告诉智能体应该怎么做。
+智能体只能通过不断 **试错（Trial-and-Error）** ，从成功和失败中总结经验，最终学会如何在复杂环境中做出更优决策。
+
+---
+
+如果说：
+
+监督学习像“老师带着做题”；
+那么强化学习更像“自己在游戏中摸索通关”。
+
+智能体需要自己探索：
+
+哪些行为是有效的；
+哪些选择会导致失败；
+如何在长期过程中获得最大的收益。
+
+<Aside type='note' title='基础回顾'>
+机器学习三大范式：
+1. 监督学习 (Supervised Learning)：从有标签数据中学习输入到输出的映射。
+2. 无监督学习 (Unsupervised Learning)：从无标签数据中发现隐藏结构或模式。
+3. 强化学习 (Reinforcement Learning)：智能体通过与环境交互，依据获得的奖励或惩罚来学习最优决策，以最大化累积奖励。
+</Aside>
+
+---
+
+强化学习最核心的目标并不是追求“当前最好的结果”，而是：
+
+在连续决策过程中，**最大化长期累积奖励（Cumulative Reward）** 。
+
+这意味着，智能体有时需要放弃眼前的小收益，去换取未来更大的回报。
+
+例如：
+
+- 围棋中主动弃子；
+- 游戏中绕路获取关键装备；
+- 自动驾驶中提前减速避险；
+
+这些行为虽然短期看似“吃亏”，但从长期来看却是更优的决策。
+
+---
+
+## 强化学习的基本框架：智能体与环境的交互
+
+广泛地讲，强化学习是机器通过与环境交互来实现目标的一种计算方法。
+
+### 交互过程(The Loop)
+
+- **感知**：智能体在某种程度上感知环境的**状态(State)** $S_t$，从而知道自己所处的现状。
+- **决策**：智能体根据当前的状态 $S_t$，计算出达到目标需要采取的**动作(Action)** $A_t$。
+  - 环境根据 $S_t$ 和 $A_t$ 转换到新的状态 $S_{t+1}$。
+- **反馈**：环境根据智能体的决策，返回**奖励（Reward）** $R_{t+1}$ 作为反馈。
+  - 智能体接收到新的状态 $S_{t+1}$ , 循环继续。
+
+### 序贯决策(Sequential Decision Making)
+
+智能体的动作有长远影响。现在的选择决定了未来的状态，进而限制了未来的选择。
+
+- 解决思路：需要引入 **马尔可夫决策过程(Markov Decision Process, MDP)** 来数学化描述这个过程，并通过 **动态规划(Dynamic Programming)** 或 **时序差分(Temporal Difference, TD)** 算法来学习最优策略。
+
+### 经历(Experience)与轨迹(Trajectory)
+
+- 一次完整的交互（从开始到结束）称为一个 **回合(Episode)** 或 **轨迹(Trajectory)**。
+- 交互产生序列数据：$(S_0, A_0, R_0, S_1, A_1, R_1, \ldots, S_{T-1}, A_{T-1}, R_{T-1}, S_T)$ 。RL算法利用这些序列进行学习。
+
+### 关联任务 vs 非关联任务
+
+- 非关联任务 (Non-associative)：无需区分状态，目标是找到全局最优的单个动作或追踪变化环境中的最优动作。典型例子是多臂老虎机 (multi-armed bandit)。
+- 关联任务 (Associative)：动作选择需与当前状态 (State) 或情境 (Context) 关联。智能体需学习从状态到最优动作的映射。上下文老虎机 (Contextual Bandit) 是简单例子，而完整的 RL 问题（如导航）是典型的关联任务。
+
+---
+
+## 强化学习的关键要素
+
+to be continued …………
+
+---
+
+## 强化学习常用符号
+
+- $S$: 状态空间(State Space)
+- $S_t, s$: 当前状态(State at time t, a specific state) - 大写为随机变量，小写为具体值
+- $A$: 动作空间(Action Space)
+- $A_t, a$: 当前动作 (Action at time t, a specific action) - 大写为随机变量，小写为具体值
+- $R_t, r$: 奖励 (Reward at time t, a specific reward value) - 大写为随机变量，小写为具体值
+- $\pi$: 策略(Policy)或模型(Model)
+- $V^{\pi}(s)$: 策略 $\pi$ 下的动作价值函数 (Action-value function under policy $\pi$)
+- $Q^{\pi}(s, a)$: 策略 $\pi$ 下的动作价值函数 (Action-value function under policy $\pi$)
+- $G_t$: 回报 (Return, cumulative future reward from t) - 随机变量
+- $γ$: 折扣因子 (Discount factor)
+- $p(s'|s, a)$: 状态转移概率 (State transition probability)
+- $mathBB{E}[\cdot]$: 期望 (Expectation)
+- $H_t$: 历史 (History)
+
+---
+
+本文参考如下：
+
+1⃣ [Axi's Blog](https://axi404.top/blog/rl-note-1)
+
+2⃣ [Hana's Blog](https://hana0721.top/blog/rl-note-1)
+
+3⃣ [动手学强化学习](https://hrl.boyuai.com/chapter/1/%E5%88%9D%E6%8E%A2%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0)
+
+4⃣ [Lou-uo's repo](https://github.com/Lou-uo/Reinforcement-Learning/blob/main/Basic%20knowledge%20literacy/%E7%AC%AC1%E7%AB%A0%20%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0.pdf)

@@ -5,12 +5,13 @@ import { AstroError } from 'astro/errors'
 import { cn } from '@/utils'
 import Icon from './Icon.astro'
 
-const asideVariants = ['note', 'tip', 'caution', 'danger'] as const
+const asideVariants = ['note', 'tip', 'caution', 'danger', 'default'] as const
 const icons = {
   note: 'info',
   tip: 'bulb',
   caution: 'alert',
-  danger: 'octangon'
+  danger: 'octangon',
+  default: 'quote'
 } as const
 
 interface Props {
@@ -59,6 +60,11 @@ if (!title) {
     }
     &.aside-danger {
       --primary: 339 90% 60%;
+    }
+    &.aside-default {
+      --primary: 200 18% 70%;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 0, 0, 0.1);
     }
 
     .aside-content {
