@@ -1,0 +1,63 @@
+---
+title: "Paper Reading: World Model 1"
+publishDate: 2026-05-04
+updatedDate: 2026-05-04
+description: 探索 World Model 的研究本质
+category: research
+tags:
+  - paper reading
+  - world model
+language: zh
+heroImage:
+  src: src/assets/webp2research/World-Model-1.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #B4CFE6, #7BB2C1, #D5ECFD)'
+---
+
+import { ArxivRating } from '@/components/advanced'
+import { Aside } from '@/components/user'
+
+<Aside type='default' title='评分准则'>
+  <div class='space-y-2'>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★</span><span class='text-gray-400'>☆☆☆☆</span>
+      <span>平平无奇的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★</span><span class='text-gray-400'>☆☆☆</span>
+      <span>正常的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★</span><span class='text-gray-400'>☆☆</span>
+      <span>广受认可或者让我眼前一亮的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★★</span><span class='text-gray-400'>☆</span>
+      <span>奠基性的论文或者我非常喜欢的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★★★</span>
+      <span>毋庸置疑的最棒的论文</span>
+    </div>
+  </div>
+</Aside>
+
+## World Models
+
+<ArxivRating id='1803.10122' tldr='World Model 的奠基之作' rank={4}>
+  <img src='/src/assets/papers/World Models.webp' alt='World Model 开山之作' class='w-full rounded-lg mb-4' />
+  <p>虽然说是世界模型，但是我觉得更适合叫梦境模型🙃。论文的核心架构是由：视觉模块(Vision)[变分自编码器 VAE，进行降维和特征提取]、记忆模块(Memory)[混合密度网络结合循环神经网络 MDN-RNN，预测下一个状态]、控制模块(Controller)[简单的线性神经元层，进行决策]。而论文中最惊艳的就是智能体仅靠 Memory 模块生成的“幻觉”进行训练。</p>
+  <p>先让智能体在真实环境中随机探索，记录数据。用这些数据训练 VAE 和 RNN ，使其能模拟环境反应。在 RNN 预测出的“虚拟空间”里迭代优化 Controller，再回到真实环境依然表现出色。</p>
+  <p>一篇用来解决强化学习难以学习大模型权重的文章，竟然开启了如今世界模型研究的热潮。虽然预测导致的漂移、细节丢失、参数量巨大等问题，导致其实际效果不如传统 RL 算法。</p>
+</ArxivRating>
+
+> 我应该会有一段比较长的时间不会更新 World Model 的内容了。在写这个 Blog 时，我进行了很多的调研，发现其实现在大多数的世界模型都有种套壳的感觉，学术界似乎并不能划清不同方向与 World Model 的界限。
+> 像 World Models 这篇开山之作，目前只有 DeepMind 的 Dreamer 属于这种潜在空间的强化学习的延伸。其他像 LeCun 支持用稀疏表征建模的 JEPA、李飞飞 主张像素级重建世界的 Marble 还有具身智能中的应用……实在是太多了，不适合一个人进行 Paper Reading 的工作。
+> 我还是需要去选择一个或几个做一些实在的研究或复现，才能理清楚 World Model 的实质。有缘再会！
+
+---
+本文参考如下：
+
+1⃣ [浙江大学-大模型导论](https://www.bilibili.com/video/BV1Lgcsz2Eou/?spm_id_from=333.337.search-card.all.click&vd_source=09b548343aff62fd78c442b7fba8f167)

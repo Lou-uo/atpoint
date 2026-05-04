@@ -41,6 +41,7 @@ const imageProps: {
 } : undefined
 
 const imageAlt: string = (heroImage?.alt || title) as string
+const themeColor: string = heroImage?.color || 'transparent'
 ---
 
 {
@@ -53,14 +54,19 @@ const imageAlt: string = (heroImage?.alt || title) as string
         loading='eager'
         {...imageProps}
       />
-      <Image
-        alt='Blur image'
-        fetchpriority='high'
-        loading='eager'
-        id='blurImage'
+      <div
         class='absolute end-0 top-4 z-0 mt-0 h-full max-w-[65ch] rounded-3xl opacity-60 blur-xl transition-opacity duration-300'
-        {...imageProps}
-      />
+        style={themeColor !== 'transparent' ? `background: ${themeColor};` : ''}
+      >
+        <Image
+          alt='Blur image'
+          fetchpriority='high'
+          loading='eager'
+          id='blurImage'
+          class='h-full w-full rounded-3xl'
+          {...imageProps}
+        />
+      </div>
     </div>
   )
 }
