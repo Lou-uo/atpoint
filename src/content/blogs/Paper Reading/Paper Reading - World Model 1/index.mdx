@@ -47,7 +47,7 @@ import { Aside } from '@/components/user'
 ## World Models
 
 <ArxivRating id='1803.10122' tldr='World Model 的奠基之作' rank={4}>
-  <img src='/src/assets/papers/World Models.webp' alt='World Model 开山之作' class='w-full rounded-lg mb-4' />
+  <img src={'/src/assets/papers/World Models.webp'} alt='World Model 开山之作' class='w-full rounded-lg mb-4' />
   <p>虽然说是世界模型，但是我觉得更适合叫梦境模型🙃。论文的核心架构是由：视觉模块(Vision)[变分自编码器 VAE，进行降维和特征提取]、记忆模块(Memory)[混合密度网络结合循环神经网络 MDN-RNN，预测下一个状态]、控制模块(Controller)[简单的线性神经元层，进行决策]。而论文中最惊艳的就是智能体仅靠 Memory 模块生成的“幻觉”进行训练。</p>
   <p>先让智能体在真实环境中随机探索，记录数据。用这些数据训练 VAE 和 RNN ，使其能模拟环境反应。在 RNN 预测出的“虚拟空间”里迭代优化 Controller，再回到真实环境依然表现出色。</p>
   <p>一篇用来解决强化学习难以学习大模型权重的文章，竟然开启了如今世界模型研究的热潮。虽然预测导致的漂移、细节丢失、参数量巨大等问题，导致其实际效果不如传统 RL 算法。</p>
