@@ -11,7 +11,30 @@ type Props = {
 
 // Get the requested entry
 const { id, collections, class: className } = Astro.props
-const path = Astro.url.pathname.split('/').slice(0, -1).join('/')
+
+// Helper function to convert post id to route
+const getRoute = (postId: string) => {
+  // Remove /index.md or /index.mdx suffix
+  const withoutIndex = postId.replace(/\/index\.(md|mdx)$/, '')
+  
+  // Split into category and title parts
+  const parts = withoutIndex.split('/')
+  const category = parts[0] || ''
+  const title = parts[1] || ''
+  
+  // Remove category prefix from title if it exists (e.g., "Paper Reading - " from "Paper Reading - Agent Memory 1")
+  const categoryPrefix = category + ' - '
+  let cleanTitle = title.startsWith(categoryPrefix) 
+    ? title.slice(categoryPrefix.length) 
+    : title
+  
+  // Convert to kebab-case
+  cleanTitle = cleanTitle.toLowerCase().replace(/\s+/g, '-')
+  const categoryKebab = category.toLowerCase().replace(/\s+/g, '-')
+  
+  // Return: category/title-without-category-prefix
+  return `${categoryKebab}/${cleanTitle}`
+}
 
 // Get the current post and its category
 const currentPost = collections.find((x) => x.id === id)
@@ -23,7 +46,7 @@ if (currentCategory) {
   navigationCollections = collections.filter((x) => x.data.category === currentCategory)
 }
 
-// Get the next and prev entries (modulo to wrap index)
+// Get the next and prev entries
 const index = navigationCollections.findIndex((x) => x.id === id)
 const prev = navigationCollections[index - 1]
 const next = navigationCollections[index + 1]
@@ -34,7 +57,7 @@ const next = navigationCollections[index + 1]
     {
       prev && (
         <a
-          href={`${path}/${prev.id}`}
+          href={`/blog/${getRoute(prev.id)}`}
           class='group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 no-underline transition-colors duration-300 hover:bg-muted max-sm:max-w-[80%] sm:flex'
         >
           <svg
@@ -70,7 +93,7 @@ const next = navigationCollections[index + 1]
     {
       next && (
         <a
-          href={`${path}/${next.id}`}
+          href={`/blog/${getRoute(next.id)}`}
           class='group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-right no-underline transition-colors duration-300 hover:bg-muted max-sm:float-end max-sm:max-w-[80%] sm:flex'
         >
           <p class='truncate font-medium transition-colors'>{next.data.title}</p>

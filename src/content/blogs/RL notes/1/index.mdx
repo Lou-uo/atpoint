@@ -1,0 +1,290 @@
+---
+title: "RL学习笔记（1）: 强化学习简介"
+publishDate: 2026-05-03
+updatedDate: 2026-05-07
+description: 强化学习简介
+category: research
+tags:
+  - reinforcement learning
+language: zh
+heroImage:
+  src: src/assets/webp2research/RL-1.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #FAC4CB, #83BA93, #DA7897)'
+---
+
+import { Aside } from '@/components/user'
+/* - note - 蓝色信息提示
+   - tip - 紫色技巧提示
+   - caution - 黄色警告提示
+   - danger - 红色危险提示 */
+
+## 什么是强化学习？
+假如你第一次玩一款游戏。
+你不知道地图，不知道敌人会出现在哪里，也不知道怎样才能通关。
+
+于是你开始不断尝试：
+
+- 往左走，掉进陷阱；
+- 往右走，拿到奖励；
+- 某次操作虽然短期吃亏，却帮助你后面成功通关。
+
+经过大量“尝试—反馈—调整”之后，你逐渐学会了如何获得更高的分数。
+
+这个过程，其实就是强化学习（Reinforcement Learning, RL）的核心思想。
+
+---
+
+强化学习是一种让 **智能体（Agent）** 通过与 **动态、开放的环境（Environment）** 不断交互，并根据 **奖励（Reward）** 反馈，自主学习 **策略（Policy）** 的方法。
+
+与传统机器学习不同，强化学习并没有“标准答案”直接告诉智能体应该怎么做。
+智能体只能通过不断 **试错（Trial-and-Error）** ，从成功和失败中总结经验，最终学会如何在复杂环境中做出更优决策。
+
+---
+
+如果说：
+
+监督学习像“老师带着做题”；
+那么强化学习更像“自己在游戏中摸索通关”。
+
+智能体需要自己探索：
+
+哪些行为是有效的；
+哪些选择会导致失败；
+如何在长期过程中获得最大的收益。
+
+<Aside type='note' title='基础回顾'>
+机器学习三大范式：
+1. 监督学习 (Supervised Learning)：从有标签数据中学习输入到输出的映射。
+2. 无监督学习 (Unsupervised Learning)：从无标签数据中发现隐藏结构或模式。
+3. 强化学习 (Reinforcement Learning)：智能体通过与环境交互，依据获得的奖励或惩罚来学习最优决策，以最大化累积奖励。
+</Aside>
+
+---
+
+强化学习最核心的目标并不是追求“当前最好的结果”，而是：
+
+在连续决策过程中，**最大化长期累积奖励（Cumulative Reward）** 。
+
+这意味着，智能体有时需要放弃眼前的小收益，去换取未来更大的回报。
+
+例如：
+
+- 围棋中主动弃子；
+- 游戏中绕路获取关键装备；
+- 自动驾驶中提前减速避险；
+
+这些行为虽然短期看似“吃亏”，但从长期来看却是更优的决策。
+
+---
+
+## 强化学习的基本框架：智能体与环境的交互
+
+广泛地讲，强化学习是机器通过与环境交互来实现目标的一种计算方法。
+
+### 交互过程 (The Loop)
+
+- **感知**：智能体在某种程度上感知环境的**状态(State)** $S_t$，从而知道自己所处的现状。
+- **决策**：智能体根据当前的状态 $S_t$，计算出达到目标需要采取的**动作(Action)** $A_t$。
+  - 环境根据 $S_t$ 和 $A_t$ 转换到新的状态 $S_{t+1}$。
+- **反馈**：环境根据智能体的决策，返回**奖励（Reward）** $R_{t+1}$ 作为反馈。
+  - 智能体接收到新的状态 $S_{t+1}$ , 循环继续。
+
+### 序贯决策 (Sequential Decision Making)
+
+智能体的动作有长远影响。现在的选择决定了未来的状态，进而限制了未来的选择。
+
+- 解决思路：需要引入 **马尔可夫决策过程(Markov Decision Process, MDP)** 来数学化描述这个过程，并通过 **动态规划(Dynamic Programming)** 或 **时序差分(Temporal Difference, TD)** 算法来学习最优策略。
+
+### 经历 (Experience)与轨迹 (Trajectory)
+
+- 一次完整的交互（从开始到结束）称为一个 **回合(Episode)** 或 **轨迹(Trajectory)**。
+- 交互产生序列数据：$(S_0, A_0, R_0, S_1, A_1, R_1, \ldots, S_{T-1}, A_{T-1}, R_{T-1}, S_T)$ 。RL算法利用这些序列进行学习。
+
+### 关联任务 vs 非关联任务
+
+- **非关联任务 (Non-associative)**：无需区分状态，目标是找到全局最优的单个动作或追踪变化环境中的最优动作。典型例子是**多臂老虎机 (multi-armed bandit)**。
+- **关联任务 (Associative)**：动作选择需与当前**状态 (State)** 或**情境 (Context)** 关联。智能体需学习从状态到最优动作的映射。**上下文老虎机 (Contextual Bandit)** 是简单例子，而完整的 RL 问题（如导航）是典型的关联任务。
+
+---
+
+## 强化学习的关键要素
+
+### 历史 (History)与状态 (State)
+
+- **历史 (History)**$H_t$: 从开始到时间t为止的所有**观测 (Observation)**、动作、奖励序列: $H_t = (O_1, R_1, A_1, \ldots, A_{t-1}, O_t, R_t)$。包括了智能体进行$A_t$前的全部原始信息。
+- **状态 (State)**$S_t$: 是对历史的总结，包含决定未来所需的所有信息。状态是历史的一种函数 $S_t = f(H_t)$
+- **环境状态 (Environment State)**$S^e_t$: 环境内部决定下一状态 / 奖励的完整信息，但是不一定对智能体可见。
+- **智能体状态 (Agent State)**$S^a_t$: 智能体内部用于决策的信息，是历史的一种函数 $S^a_t = f(H_t)$。RL算法基于 $S^a_t$ 学习。
+
+### 环境的可观测性 (Observability)
+
+- **完全可观测环境 (Fully Observable Environment)**: 智能体可以观察到环境的所有状态信息$O_t=S^e_t$。当前的观测就包含所有决策需要的历史信息。
+  - 这类问题通常用 **马尔可夫决策过程 (Markov Decision Process, MDP)** 建模。
+  - **马尔可夫性质 (Markov Property)**: 未来只依赖当前状态，与历史路径无关，即 $P[S_{t+1} | S_t] = P[S_{t+1} | S_1, \ldots, S_t]$。
+  - 环境状态 $S^e_t$ 通常满足马尔可夫性质。在完全可观测时，智能体状态 $S^a_t = S^e_t$ 也满足。
+- **部分可观测环境 (Partially Observable Environment)**：智能体只能观察到环境的部分状态信息 ($O_t \neq S^e_t$)。当前观测不足以确定状态，历史信息变得重要。
+  - 这类问题用 **部分可观测马尔可夫决策过程 (Partially Observable Markov Decision Process, POMDP)** 建模。
+  - 处理办法: 智能体需要构建状态估计 $S^a_t$。常用方法包括使用历史 $H_t$、循环神经网络 (RNN) 或维护**信念状态 (Belief State)** $b(s^e) = P(S^e_t = s^e | H_t)$ (即关于真实状态的概率分布)。
+
+### 奖励信号 (Reward Signal) $R_t$
+
+- 奖励 $R_t$ 是一个标量反馈信号，表明智能体在 t 时刻动作后的即时“好坏”程度。
+- 目的: 定义 RL 的目标。智能体旨在最大化累积奖励。
+-  **奖励设计 (Reward Shaping)** 非常关键，直接引导学习方法。例如：
+   - 游戏胜利：高正奖励。
+   - 游戏失败：高负奖励。
+   - 触发特定事件（如吃金币）：小正奖励。
+   - 无事发生：零奖励或小的负奖励（鼓励效率）。
+
+### 回报 (Return) 与 折扣 (Discounting)
+
+- **回报 (Return)**$G_t$: 从时间 $t$ 开始的未来奖励累积。它衡量了当前状态或状态-动作对在长期来看的价值。
+  - **分幕式任务 (Episodic Tasks)**: 有明确终止状态 $T$。$G_t := R_{t+1} + R_{t+2} + \ldots + R_T = \sum_{k=t+1}^T R_k$
+  - **持续式任务 (Continuous Tasks)**: 无明确终止状态。
+
+- **折扣回报 (Discounted Return)**$G_t$ (或 $U_t$): 为了处理无限和以及权衡近期与远期奖励，引入**折扣因子 (Discount Factor)** $γ \in [0, 1)$。$G_t := R_{t+1} + γ R_{t+2} + γ^2 R_{t+3} + \ldots = \sum_{k=0}^∞ γ^k R_k$ 此定义统一适用于分幕式 (令 $R_k = 0$ for $k > T $) 和持续式任务。
+  - 为什么需要折扣因子 $γ$？
+    1. 数学便利：确保回报有界，利于算法收敛。
+    2. 模型不确定性：远期奖励预测难度大，折扣降低其影响。
+    3. 偏好即时奖励：符合直觉，现在的奖励通常更有价值。
+    4. 模拟终止概率：可视为每步有 $1 - γ$ 的概率终止。
+
+> **折扣因子的影响**：
+> - $γ \approx 0$: 智能体更关注近期奖励，远期奖励被折扣化。
+> - $γ \approx 1$: 智能体更关注远期奖励，近期奖励被折扣化。
+
+> **回报的递归关系**: 折扣回报满足重要的递归性质：$G_t = R_{t+1} + γ G_{t+1}$
+> **回报的随机性**: 由于未来的动作和状态可能随机，未来的奖励也是随机的。因此，$G_t$ 是一个随机变量。算法通常使用实际观测到的回报值来估计其期望。
+
+### 环境模型 (Environment Model)
+
+- 模型描述环境行为，预测环境对动作的响应。包含：
+  1. **状态转移概率 (State Transition Probability)** $p(s'|s, a)$: 在状态 $s$ 下，执行动作 $a$ 后，环境状态转移为 $s'$ 的概率。$p(s'|s, a) = \mathbb{P}(S_{t+1} = s' | S_t = s, A_t = a)$
+  2. **奖励函数 (Reward Function)** $r(s, a)$ 或 $R^a_t$: 在状态 $s$ 下，执行动作 $a$ 后，期望获得的立即奖励。$R^a_s = \mathbb{E}[R_{t+1} | S_t = s, A_t = a]$
+- 引出两种主要方法类型：
+  - **基于模型 (Model-Based)**: 尝试学习或利用环境模型。
+  - **无模型 (Model-Free)**: 不依赖显式模型，直接从经验中学习。
+
+### 随机性来源 (Randomness)
+
+- RL 中存在多个随机源：
+  1. **动作随机性 (Stochastic Action)**: 智能体的策略 $\pi(a|s)$输出概率分布，$A_t ∼ \pi(a|s)$。
+  2. **状态随机性 (Stochastic State)**: 环境状态本身可能随机，$S_{t+1} ∼ p(\cdot|S_t, A_t) $。
+  3. **奖励随机性**: 奖励 $R_{t+1}$ 也可能依赖于 $(S_t, A_t, S_{t+1})$ 并且是随机的。
+
+## 强化学习智能体的核心组成
+
+一个典型的 RL 智能体通常包含以下一个或多个组件：
+
+### 策略 (Policy) $\pi$
+
+- 策略是智能体的“大脑”，定义了智能体在给定状态下如何选择动作。
+- **确定性策略 (Deterministic Policy)**: $a = \pi (s)$。
+- **随机性策略 (Stochastic Policy)**: $\pi (a|s) = P(A_t = a | S_t = s)$，输出动作的概率分布。随机策略在探索和处理不确定性时有优势。
+- **目标**: 找到最优策略 $\pi^*$，使得期望累计奖励最大化。
+- 策略的价值可以等价转换成奖励函数在策略的占用度量上的期望，即：
+ - $最优策略 = \argmax_{策略}\mathbb{E}_{(状态, 动作) ∼ 策略的占用度量} [奖励函数(状态, 动作)]$
+
+### 价值函数 (Value Function) $V^{π}(s), Q^{π}(s, a)$
+
+- 价值函数用于评估状态或状态-动作对的“好坏”程度（长期价值），即遵循特定策略 $\pi$ 能获得的期望回报。
+- **状态价值函数 (State Value Function)** $V^{π}(s)$: 策略 $\pi$ 下的状态价值函数，衡量状态 $s$ 在长期来看的价值。$V^{π}(s) = \mathbb{E}[G_t | S_t = s]$
+- **动作价值函数 (Action Value Function)** $Q^{π}(s, a)$: 策略 $\pi$ 下的动作价值函数，衡量状态 $s$ 下执行动作 $a$ 的价值。$Q^{π}(s, a) = \mathbb{E}[G_t | S_t = s, A_t = a]$
+- **关系**: $V^{π}(s)$ 是 $Q^{π}(s, a)$ 在策略 $\pi$ 下的期望值：
+  - 离散动作：$V^{π}(s) = \sum_{a \in A} \pi(a|s) Q^{π}(s, a)$
+  - 连续动作：$V^{π}(s) = \int_{a \in A} \pi(a|s) Q^{π}(s, a) da$
+- 价值函数帮助评估和改进策略。
+
+### 模型 (Model)
+
+- 模型是对环境动态的模拟。如果智能体拥有或学习了模型，就可以进行 规划 (Planning)。
+
+## 强化学习的关键挑战与权衡
+
+### 探索 (Exploration) vs 利用 (Exploitation)
+
+RL 的核心困境: 是利用当前已知的最好选择，还是探索未知区域以发现更好的策略？
+- **利用**: 选择当前估计价值最高的动作，最大化短期收益。
+- **探索**: 尝试非最优或未充分尝试的动作，收集信息，可能发现长期更优的策略，但可能牺牲短期收益。
+- **平衡**: 是关键。过度利用可能陷入局部最优，过度探索则效率低下。常用策略有 $ϵ$-greedy、UCB、乐观初始值等。
+
+### 预测 (Prediction) vs 控制 (Control)
+
+RL 的两大任务类型：
+
+- **预测 (Prediction) / 策略评估 (Policy Evaluation)**: 
+  - 问题: 给定策略 $\pi$，评估其价值。
+- **控制 (Control) / 策略优化 (Policy Optimization)**: 
+  - 问题: 找到最优策略 $\pi^*$。
+  - 目标: 最大化长期回报，找到最优价值函数 $V^*(s)$, $Q^*(s, a)$和最优策略 $\pi^*$。
+- **关系**: 控制问题通常通过迭代地进行预测和改进来解决，这个过程称为 广义策略迭代 (Generalized Policy Iteration, GPI)。
+
+### 学习 (Learning) vs 规划 (Planning)
+
+- **学习 (Learning)**: 
+  - 环境模型未知。
+  - 通过与**真实环境**交互，收集经验。
+  - 直接从经验中改进策略或价值函数。
+- **规划 (Planning)**: 
+  - 环境模型已知或已学习。
+  - 利用模型进行模拟计算（思考/推演），产生**模拟经验**。
+  - 基于模拟经验改进策略或价值函数，无需与真实环境交互。
+  - 例子：动态规划 (DP)、蒙特卡洛树搜索 (MCTS)。
+- **结合**: 许多方法（如 Dyna-Q）结合两者，通过真实交互学习模型，再利用模型进行规划加速学习。
+
+## 强化学习方法分类
+
+RL 算法课从不同维度分类:
+
+- **基于价值 (Value-Based)**: 
+  - 学习价值函数 $V(s)$ 或 $Q(s, a)$。
+  - 策略隐式。
+  - 代表: Q-Learning、SARSA、DQN。
+- **基于策略 (Policy-Based)**: 
+  - 直接学习策略 $\pi (a|s)$。
+  - 可处理连续动作空间，能学习随机策略。
+  - 代表: REINFORCE, Policy Gradients。
+- **演员-评论家 (Actor-Critic)**:
+  - 结合前两者。**演员 (Actor)** 学策略，**评论家 (Critic)** 学价值函数指导演员。
+  - 代表: A2C、A3C、DDPG、SAC。
+- **无模型 (Model-Free)**:
+  - 不学习环境模型，直接从经验学习。
+  - 样本效率通常较低。
+  - 包括上述大部分方法。
+- **基于模型 (Model-Based)**：
+  - 学习环境模型，并利用模型进行规划或生成模拟数据。
+  - 样本效率通常较高，但受模型精度限制。
+  - 代表：Dyna-Q, MCTS 相关方法。
+
+---
+
+## 强化学习常用符号
+
+- $S$: 状态空间(State Space)
+- $S_t, s$: 当前状态(State at time t, a specific state) - 大写为随机变量，小写为具体值
+- $A$: 动作空间(Action Space)
+- $A_t, a$: 当前动作 (Action at time t, a specific action) - 大写为随机变量，小写为具体值
+- $R_t, r$: 奖励 (Reward at time t, a specific reward value) - 大写为随机变量，小写为具体值
+- $\pi$: 策略(Policy)或模型(Model)
+- $V^{π}(s)$: 策略 $\pi$ 下的动作价值函数 (Action-value function under policy $\pi$)
+- $Q^{π}(s, a)$: 策略 $\pi$ 下的动作价值函数 (Action-value function under policy $\pi$)
+- $G_t$: 回报 (Return, cumulative future reward from t) - 随机变量
+- $γ$: 折扣因子 (Discount factor)
+- $p(s'|s, a)$: 状态转移概率 (State transition probability)
+- $\mathbb{E}[\cdot]$: 期望 (Expectation)
+- $H_t$: 历史 (History)
+
+---
+
+本文参考如下：
+
+[1] [Axi's Blog](https://axi404.top/blog/rl-note-1)
+
+[2] [Hana's Blog](https://hana0721.top/blog/rl-note-1)
+
+[3] [动手学强化学习](https://hrl.boyuai.com/chapter/1/%E5%88%9D%E6%8E%A2%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0)
+
+[4] [Lou-uo's repo](https://github.com/Lou-uo/Reinforcement-Learning/blob/main/Basic%20knowledge%20literacy/%E7%AC%AC1%E7%AB%A0%20%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0.pdf)
