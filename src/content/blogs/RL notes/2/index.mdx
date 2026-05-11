@@ -1,0 +1,161 @@
+---
+title: "RL学习笔记（2）: 多臂赌博机"
+publishDate: 2026-05-11
+updatedDate: 2026-05-11
+description: 多臂赌博机问题（ϵ-贪心、UCB、汤普森采样……）
+category: research
+tags:
+  - reinforcement learning
+language: zh
+heroImage:
+  src: src/assets/webp2research/RL-2.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #D4DAE0, #5DB1B7, #68595A)'
+---
+
+import { Aside } from '@/components/user'
+/* - note - 蓝色信息提示
+   - tip - 紫色技巧提示
+   - caution - 黄色警告提示
+   - danger - 红色危险提示 */
+
+## 引言
+
+本文先讨论一种简化版的强化学习问题：多臂赌博机。与强化学习不同的是，多臂赌博机不存在**状态信息**，只有**动作和奖励**，聚焦于单步决策中的**探索与利用**。
+
+## 多臂赌博机 (Multi-Armed Bandit, MAB) 问题
+
+### 情景引入
+
+有一个拥有 $K$ 根拉杆的老虎机，拉动每一根拉杆都对应一个关于奖励的概率分布 $R$ 。我们每次拉动其中一根拉杆，就可以从该拉杆对应的奖励概率分布中获得一个奖励 $r$ 。我们在各根拉杆的奖励概率分布未知的情况下，从头开始尝试，目标是在操作 $T$ 次拉杆后获得尽可能高的累积奖励。由于奖励的概率分布是未知的，因此我们需要在“探索拉杆的获奖概率”和“根据经验选择获奖最多的拉杆”中进行权衡。“采用怎样的操作策略才能使获得的累积奖励最高”便是多臂赌博机问题。
+
+### 细节剖析
+
+- **场景**: 存在 $K$ 个选项，选择每个臂 $a$ 会根据未知的概率分布 $P_a$ 产生一个奖励。
+- **过程**: 在 $T$ 个时间步内，智能体在每一步 $t$ 选择一个臂 $A_t$ ，获得奖励 $R_{t+1}$。
+- **目标**: 最大化 $T$ 步内的累积奖励 $\sum^T_{t=1}R_t$， 等价于尽快找到并持续利用具有最高奖励价值 $Q^*$ 的最优臂。
+- **挑战**: 智能体不知道 $Q^(a)$ ，必须通过尝试来估计。
+- **特性**: 无状态，当前选择不影响未来的奖励分布。
+
+### 参数定义
+
+- 元组 < $ A, R $ > : 已有条件
+  - $A$ : **动作集合**，即 $K$ 个拉杆，$\{a_1, \ldots, a_K\}$。
+  - $R$ : **奖励概率分布**。对于每个动作 $a$，奖励 $r \sim P_a(r)$。
+- **期望**: $Q(a) = \mathbb{E}_{r \sim R(\cdot | a)}[r]$，每个动作 $a$ 的期望奖励。
+- **最优期望奖励**: $Q^* = \max_{a \in A} Q(a)$，所有动作 $a$ 中的奖励期望的最大值。
+
+#### **懊悔 (Regret)**
+
+- 定义: 拉动当前拉杆的动作 $a$ 与最优拉杆的期望奖励差
+- **累积懊悔**: $L_T = \sum^T_{t=1} (Q^* - Q(a))$，操作 $T$ 次后累积的懊悔总量。
+- 目标: 设计算法使总懊悔 $L_T$ 随时间 $T$ **次线性 (sublinear)** 增长 (即 $\lim_{T \to \infty} \frac{L_T}{T} = 0$)。这意味着随着时间推移，智能体几乎一定能找到最优臂。
+
+## 动作价值估计方法 (Action-Value Methods)
+
+估计 $Q(a)$ 使解决 MAB 的基础。
+
+1. **采样平均法 (Sample-Average Method)**
+
+  - **思想**: 使用动作 $a$ 历史上获得的所有奖励的平均值作为其价值估计 $Q_t(a)$。
+  
+    $Q_t(a) := \frac{\sum^{t-1}_{i=1} R_i}{t-1} (A_i = a)$
+
+  - **收敛性**: 根据大数定律，若每个动作被无限次选择，$Q_t(a)$ 会收敛到 $Q(a)$ 。
+
+2. **增量式期望更新 (Incremental Expect Update)**
+
+  - **目的**: 高效计算，无需存储所有历史奖励。
+  - **更新规则**: 对于动作 $a$ 的第 $n$ 次选择获得的奖励 $R_n$: $Q_{n+1} = Q_n + \frac{1}{n}(R_n - Q_n)$
+  - **通用形式**: $新估计值=旧估计值+步长×误差$，`NewEstimate <- OldEstimate + StepSize * [Target - OldEstimate]`，其中`StepSize`$\alpha_n = 1/n$。
+
+3. **处理非平稳问题 (Non-stationary Problems)**
+
+- **问题**: 当 $Q(a)$ 随时间变化时，采样平均法 (步长 $1/n$) 因给予所有历史奖励同等权重而表现不佳。
+- **解决**: 使用**常数步长 (Constant Step Size)** $\alpha \in (0, 1): Q_{n+1} = Q_n + \alpha (R_{n+1} - Q_n)$。
+- **效果**: 实现指数近因加权平均，更重视近期奖励，能追踪变化的目标，但不会完全收敛。
+
+4. **步长参数选择 (Step-Size Parameter)**
+
+- **收敛条件 (平稳问题，随机逼近理论):** $\sum_{n=1}^\infty \alpha_n(a) = \infty$ 和 $\sum_{n=1}^\infty \alpha_n^2(a) < \infty$
+- $\alpha_n = 1/n$ 满足条件，常数 $\alpha$ 不满足第二个条件。
+
+## 探索与利用策略
+
+平衡尝试未知选项（探索）和选择当前最优选项（利用）是 MAB 的核心。
+
+1. **ϵ-贪心 (ϵ-Greedy)**
+- **机制**: 以 $1-\epsilon$ 概率选择当前估计值 $Q_t(a)$ 最高的动作 (利用)，以 $\epsilon$ 概率从所有动作中随机选择一个 (探索)。
+- **优缺**: 简单，保持持续探索；但是探索是随机的，可能导致长期性能损失 (线性遗憾)。注：设置 $\epsilon = 1/t$ 能保证收敛于0。 
+
+2. **乐观初始值 (Optimistic Initial Values)**
+- **机制**: 将所有 $Q_1(a)$ 初始化为一个很高的值，然后始终采取纯贪心策略 (选择 $A_t=\arg \max_a Q_t(a)$ ，使用采样平均法 (步长 $1/n$) 更新)。
+- **效果**: 高初始值鼓励智能体尝试所有动作至少一次，实现早期系统性探索。
+- **优缺**:  实现简单；但对初始值敏感，随机环境下可能过早锁定次优动作。
+
+3. **置信度上界 (Upper Confidence Bound, UCB)**
+- **思想**: “在不确定性面前保持乐观”。选择潜力大的动作，$潜力=高估计值 + 高不确定性$。
+- **机制**: $A_t := \arg \max_{a \in A} [Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}}] $，其中 $Q_t(a)$ 是利用项，$c\sqrt{\frac{\ln t}{N_t(a)}}$ 是探索项 ($N_t(a)$ 为动作 $a$ 被选次数，$t$ 为总步数，$c$ 为控制探索的参数)。
+- **优缺**: 基于 Hoeffding 不等式，有较好的理论遗憾界 ($O(\log T)$) 和实践性能。
+- **算法流程**
+  - 初始化 $Q$，并且将全部臂都拉取一次，获得更新
+  - 每步 $t$，根据当前估计值 $Q_t(a)$ 和探索项 $c\sqrt{\frac{\ln t}{N_t(a)}}$ 选择 $A_t$。
+  - 观测奖励 $R_{t+1}$，更新 $Q_t(a)$ 和 $N_t(a)$。
+
+4. **汤普森采样 (Thompson Sampling / Posterior Sampling)**
+
+- **思想**：贝叶斯方法。维护每个动作价值 $Q(a)$ 的后验概率分布 $P(Q(a) \mid \text{History})$。
+
+- **算法流程**
+
+  1. 每步 $t$，为每个动作 $a$ 从其后验分布中采样一个价值 $\tilde{q}_a$
+  2. 选择采样值最大的动作 $A_t = \arg\max_a \tilde{q}_a$
+  3. 观察奖励 $R_{t+1}$
+  4. 使用贝叶斯更新规则更新动作 $A_t$ 的后验分布
+
+- **探索机制**：后验分布越宽（不确定性高），越有可能采样到高值而被选中。
+
+- **贝叶斯更新与共轭先验**（以伯努利赌博机为例）
+
+  - 奖励为 0/1。似然为伯努利分布
+  - 使用 Beta 分布 $\text{Beta}(\alpha, \beta)$ 作为共轭先验
+  - 更新规则：观察到 1 次成功（奖励=1）则 $\alpha \leftarrow \alpha + 1$，观察到 1 次失败（奖励=0）则 $\beta \leftarrow \beta + 1$。后验仍为 Beta 分布
+
+- **优缺**：实现简单（尤其使用共轭先验时），经验性能通常非常好。
+
+- **与 Greedy 对比（伯努利场景）**
+
+  | 步骤 | BernGreedy (贪心) | BernThompson (汤普森采样) |
+  |:---|:---|:---|
+  | **值计算/采样** | 计算期望值 $\theta_k = \alpha_k / (\alpha_k + \beta_k)$ | 从 $\text{Beta}(\alpha_k, \beta_k)$ 分布中采样 $\theta_k$ |
+  | **动作选择** | 选择使 $\theta$ 最大的臂 $k$ | 选择使采样值 $\theta$ 最大的臂 $k$ |
+  | **参数更新** | 根据奖励 $r_t$ 更新 $(\alpha_{a_t}, \beta_{a_t})$ | 根据奖励 $r_t$ 更新 $(\alpha_{a_t}, \beta_{a_t})$ |
+  > （循环和应用/观察步骤相同）
+
+## 补充: 梯度赌博机算法 (Gradient Bandit Algorithms)
+
+这类算法不估计动作价值，而是直接学习动作的偏好 (Preference) $H_t(a)$
+
+1. **动作选择 (Softmax Policy)**: $\pi_t(a) = P(A_t = a) = \frac{e^{H_t(a)}}{\sum^K_{b=1} e^{H_t(b)}}$
+2. **学习规则 (Stochastic Gradient Ascent)**: 
+
+  - **更新选中动作** $A_t$ 的偏好：$H_{t+1}(A_t) = H_t(A_t) + \alpha (R_t - \bar{R}_t)(1 - \pi_t(A_t))$
+  - **更新未选中动作** $a \neq A_t$ 的偏好：$H_{t+1}(a) = H_t(a) - \alpha (R_t - \bar{R}_t)\pi_t(a)$
+  - 其中 $\alpha$ 是学习率，$\bar{R}_t$ 是**奖励基线**（如历史平均奖励），用于减小方差。$(R_t - \bar{R}_t)$ 衡量当前奖励的好坏。
+  - **优缺**: 可处理非平稳环境; 对学习率和基线敏感。
+
+---
+
+本文参考如下:
+
+[1] [Axi's Blog](https://axi404.top/blog/rl-note-2)
+
+[2] [Hana's Blog](https://hana0721.top/blog/rl-note-2)
+
+[3] [动手学强化学习](https://hrl.boyuai.com/chapter/1/%E5%A4%9A%E8%87%82%E8%80%81%E8%99%8E%E6%9C%BA)
+
+[4] [Lou-uo's PDF](https://github.com/Lou-uo/Reinforcement-Learning/blob/main/Basic%20knowledge%20literacy/%E7%AC%AC2%E7%AB%A0%20%E5%A4%9A%E8%87%82%E8%80%81%E8%99%8E%E6%9C%BA.pdf)
+
+[5] Lou-uo's Code: [ϵ-贪心](https://github.com/Lou-uo/Reinforcement-Learning/blob/main/Basic%20knowledge%20literacy/%E5%A4%9A%E8%87%82%E8%80%81%E8%99%8E%E6%9C%BA_%CF%B5-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95.py)、[UCB](https://github.com/Lou-uo/Reinforcement-Learning/blob/main/Basic%20knowledge%20literacy/%E5%A4%9A%E8%87%82%E8%80%81%E8%99%8E%E6%9C%BA_%E4%B8%8A%E7%BD%AE%E4%BF%A1%E7%95%8C%E7%AE%97%E6%B3%95.py)、[汤普森采样](https://github.com/Lou-uo/Reinforcement-Learning/blob/main/Basic%20knowledge%20literacy/%E5%A4%9A%E8%87%82%E8%80%81%E8%99%8E%E6%9C%BA_%E6%B1%A4%E6%99%AE%E6%A3%AE%E9%87%87%E6%A0%B7%E7%AE%97%E6%B3%95.py)
