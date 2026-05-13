@@ -1,0 +1,109 @@
+---
+title: "RL学习笔记（3）: 马尔可夫决策过程"
+publishDate: 2026-05-13
+updatedDate: 2026-05-13
+description: 马尔可夫决策过程（MDP）
+category: research
+tags:
+  - reinforcement learning
+language: zh
+heroImage:
+  src: src/assets/webp2research/RL-3.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #B9A4DD, #F6E8C1, #F29BB8)'
+---
+
+import { Aside } from '@/components/user'
+/* - note - 蓝色信息提示
+   - tip - 紫色技巧提示
+   - caution - 黄色警告提示
+   - danger - 红色危险提示 */
+
+## 引言
+
+本文介绍马尔可夫决策过程 (Markov Decision Process, MDP)，它是强化学习中用于建模完全可观测环境下的序贯决策问题的标准框架。我们将从基础的马尔可夫性质开始，逐步构建马尔可夫过程 (MP)、马尔可夫奖励过程 (MRP)，最终引出马尔可夫决策过程 (MDP) 及其核心概念，如策略、价值函数和贝尔曼方程，最后再扩展到核心求解与优化知识。
+
+## 马尔可夫过程 (Markov Processes)
+
+### 随机过程 (Stochastic Process)
+
+在随机过程中，随机现象在某时刻 $t$ 的取值是一个向量随机变量，用 $S_t$ 表示，所有可能的状态组成集合 $S$。在某时刻 $t$ 的状态 $S_t$ 通常取决于 $t$ 时刻之前的状态。我们将已知历史信息 $(S_1, \ldots, S_t)$ 时下一个时刻状态为 $S_{t+1}$ 的概率表示成 $P(S_{t+1}|S_1, \ldots, S_t)$。
+
+### 马尔可夫性质 (Markov Property)
+
+- **定义**: 当前状态 $S_t$ 包含了预测未来所需的所有历史信息。即下一状态 $S_{t+1}$ 的概率分布仅依赖于当前状态 $S_t$。$\mathbb{P}(S_{t+1}|S_t) = P(S_{t+1}|S_1, \ldots, S_t)$。
+- **意义**: 当前状态是未来的“充分统计量”，历史信息可被丢弃。环境状态 $S^e$ 通常假定满足此性质。
+
+### 马尔可夫过程 (Markov Process, MP) / 马尔可夫链 (Markov Chain)
+
+- **定义**: 一个满足马尔可夫性质的随机状态序列，是描述无外部控制（动作）和奖励的系统动态的模型。用元组 $< S, P >$ 描述一个马尔可夫过程。
+  - $S$ 是有限数量的状态集合。
+  - $P$ 是状态转移概率矩阵，$P_{ss'} = \mathbb{P}(S_{t+1} = s'|S_t = s)$。
+  $$
+  P = \begin{bmatrix}
+  P(s_1 \mid s_1) & \cdots & P(s_n \mid s_1) \\
+  \vdots & \ddots & \vdots \\
+  P(s_1 \mid s_n) & \cdots & P(s_n \mid s_n)
+  \end{bmatrix}
+  $$
+  矩阵 $P$ 中第 $i$ 行第 $j$ 列元素 $P(s_j|s_i)=P(S_{t+1}=s_j|S_t=s_i)$ 表示从状态 $s_i$ 转移到状态 $s_j$ 的概率，我们称 $P(s'|s)$ 为状态转移函数。从某个状态出发，到达其他状态的概率和必须为 1，即状态转移矩阵 $P$ 的每一行的和为 1。
+
+### 马尔可夫奖励过程 (Markov Reward Process, MRP)
+
+- **定义**: 在 MP 基础上增加了奖励和折扣因子。由元组 $< S, P, R, \gamma >$ 定义:
+  - $S, P$: 同上。
+  - $R$: 奖励函数。$R_s = \mathbb{E}[R_{t+1}|S_t=s]$ (离开状态 $s$ 的期望立即奖励)。
+  - $\gamma$: 折扣因子。$\gamma \in [0, 1]$，用于平衡当前奖励和未来奖励。
+- **回报 (Return)**: 从 $t$ 时刻开始的折扣累计奖励。$G_t = \sum_{k=0}^\infty \gamma^k R_{t+k+1}=R_{t+1}+\gamma G_{t+1}$。
+- **状态价值函数 (State-Value Function)**: 在 MRP 中，从状态 $s$ 开始的期望回报。$v(s):=\mathbb{E}[G_t|S_t=s]$。
+- **MRP 的贝尔曼方程 (Bellman Equation for MRP)**: 描述了状态价值与其后继状态价值的关系。$v(s)=R(s)+\gamma \sum_{s'\in S} P_{ss'}v(s')$。矩阵形式: $v=R+\gamma P v$，可直接求解 $v=(I-\gamma P)^{-1} R$。
+
+### 马尔可夫决策过程 (Markov Decision Process, MDP)
+
+MDP 在 MRP 基础上引入了动作和策略，用于形式化完全可观测的 RL 问题。
+
+1. **定义**: 元组 $< S, P, R, \gamma, A, \pi >$ 
+   - $S$: 有限状态集合。
+   - $A$: 有限动作集 (可能依赖于状态 $A(s)$)。
+   - $P$: 状态转移概率矩阵，$P_{ss'}^a = \mathbb{P}(S_{t+1} = s'|S_t = s, A_{t} = a)$。
+   - $R$: 奖励函数，$R^a_s = \mathbb{E}[R_{t+1}|S_t=s, A_{t}=a]$。
+   - $\gamma$: 折扣因子。
+   - $\pi$: 策略函数，从状态到动作的映射。
+2. **核心假设**: 环境完全可预测 ($O_t = S^e_t$) 且状态满足马尔可夫性质。
+3. **与相关模型的关系**:
+   - **MAB**: 可视为单状态 MDP。
+   - **POMDP (部分可观测 MDP)**: 当 $O_t \neq S^e_t$ 时使用。需要维护信念状态 (Belief State) 并在此空间上求解。
+
+#### 策略 (Policy) \pi
+
+- **定义**: 智能体在状体 $s$ 选择动作 $a$ 的规则，通常是概率分布 $\pi(a|s)=\mathbb{P}(A_{t}=a|S_t=s)$。
+- **特性**: 通常假定是稳态的 (stationary) 和马尔可夫的 (Markovian)。
+- **固定策略下的 MDP**: 给定策略 $\pi$，MDP 退化为 MRP $< S, P^\pi, R^\pi, \gamma >$。
+  - $P^\pi_{ss'} = \sum_{a} \pi(a|s) P_{ss'}^a$ (状态转移概率矩阵)。
+  - $R^\pi_s = \sum_{a} \pi(a|s) R^a_s$ (期望奖励)。
+
+#### 价值函数 (Value Function)
+
+- **状态价值函数 (State-Value Function)**: 在状态 $s$ 开始，遵循策略 $\pi$ 的期望回报。$v_\pi(s):=\mathbb{E}_\pi[G_t|S_t=s]$。
+- **动作价值函数 (Action-Value Function)**: 在状态 $s$ 开始，执行动作 $a$，然后遵循策略 $\pi$ 的期望回报。$q_\pi(s,a):=\mathbb{E}_\pi[G_t|S_t=s, A_{t}=a]$。
+
+#### 贝尔曼期望方程 (Bellman Expectation Equation)
+
+- 描述了给定策略 $\pi$ 下 $v_\pi$ 和 $q_\pi$ 满足的一致性条件 (线性方程)。
+
+$$
+\begin{aligned}
+v^{\pi}(s) &= \sum_{a \in A} \pi(a \mid s) q_\pi(s, a) \\
+&= \sum_{a \in A} \pi(a \mid s) \left( \mathcal{R}_s^a + \gamma \sum_{s' \in S} \mathcal{P}_{ss'}^a v_\pi(s') \right) \\[6pt]
+
+q^{\pi}(s, a) &= \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a v_\pi(s')  \\
+&= \sum_{a \in A} \pi(a \mid s) \left( R_s^a + \gamma \sum_{s' \in S} P_{ss'}^a v_\pi(s') \right)
+\end{aligned}
+$$
+
+#### 蒙特卡洛方法 (Monte-Carlo methods)
+
+- **定义**: 一种基于概率统计的数值计算方法。我们通常使用重复随机抽样，然后运用概率统计方法来从抽样结果中归纳出我们想求的目标的数值估计。
+- **应用**: 用蒙特卡洛方法来估计一个策略在一个马尔可夫决策过程中的状态价值函数。一个状态的价值是它的期望回报，那么一个很直观的想法就是用策略在 MDP 上采样很多条序列，计算从这个状态出发的回报再求其期望。$v^\pi(s)=\mathbb{E}_\pi[G_t|S_t=s] \approx \frac{1}{N} \sum_{i=1}^N G_t^i$。
