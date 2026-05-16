@@ -1,0 +1,108 @@
+---
+title: "Paper Reading: Agent Memory 2"
+publishDate: 2026-05-16
+updatedDate: 2026-05-16
+description: 整理 Agent Memory 领域关于个性化记忆的工作
+category: research
+tags:
+  - paper reading
+  - agent memory
+language: zh
+heroImage:
+  src: src/assets/webp2research/Agent-Memory-2.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #D7E3EF, #8F726E, #DEDDE0)'
+---
+
+import { ArxivRating } from '@/components/advanced'
+import { Aside } from '@/components/user'
+
+<Aside type='default' title='评分准则'>
+  <div class='space-y-2'>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★</span><span class='text-gray-400'>☆☆☆☆</span>
+      <span>平平无奇的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★</span><span class='text-gray-400'>☆☆☆</span>
+      <span>正常的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★</span><span class='text-gray-400'>☆☆</span>
+      <span>广受认可或者让我眼前一亮的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★★</span><span class='text-gray-400'>☆</span>
+      <span>奠基性的论文或者我非常喜欢的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★★★</span>
+      <span>毋庸置疑的最棒的论文</span>
+    </div>
+  </div>
+</Aside>
+
+## Generative Agents
+
+<ArxivRating id='2304.03442' tldr='人类行为的交互式模拟' rank={3}>
+  <img src={'/images/papers/Generative Agents.webp'} alt='Generative Agents' class='w-full rounded-lg mb-4' />
+  <p>首个在 LLM 中加入 static persona，用带有静态标签的 Agents 在交互式的沙盒环境中进行社交行为测试</p>
+  </ArxivRating>
+
+## MemoryBank
+
+<ArxivRating id='2305.10250' tldr='基于检索的长期记忆机制' rank={3}>
+  <img src={'/images/papers/MemoryBank.webp'} alt='MemoryBank' class='w-full rounded-lg mb-4' />
+  <p>模拟人类的记忆机制，根据时间的推移遗忘和强化记忆；聊天机器人 SiliconFriend 能在心理对话中展现出更强的同理心。</p>
+  </ArxivRating>
+
+## Me-Agent
+
+<ArxivRating id='2601.20162' tldr='用户习惯学习功能的个性化 Mobile Agent' rank={2}>
+  <img src={'/images/papers/Me-Agent.webp'} alt='Me-Agent' class='w-full rounded-lg mb-4' />
+  <p>采用 two-level user habit learning -- 用户偏好学习策略 + 分层偏好记忆。User FingerTip 用于测试真实世界中的歧义指令。</p>
+  </ArxivRating>
+
+## GUI Agent
+
+<ArxivRating id='2604.11259' tldr='基于 Trajectory 诱导偏好优化的 Mobile GUI Agent 隐私个性化' rank={2}>
+  <img src={'/images/papers/GUI Agent.webp'} alt='GUI Agent' class='w-full rounded-lg mb-4' />
+  <p>在多模态的 Mobile GUI agent，这篇工作已经尝试使用 trajectory 进行 optimization。</p>
+  </ArxivRating>
+
+## Mem-PAL
+
+<ArxivRating id='2511.13410' tldr='面向 Long-term 交互的个性化对话助手' rank={1}>
+  <img src={'/images/papers/Mem-PAL.webp'} alt='Mem-PAL' class='w-full rounded-lg mb-4' />
+  <p>这篇工作做了一个 PAL-Bench，声称是首个包含多会话用户日志和对话历史的中文数据集。不过，提出的 H²Memory (分层异构记忆架构) 单纯的用 RAG 来提升个性化响应，多少还是有点缺少 insight。</p>
+  </ArxivRating>
+
+## Mem0
+
+<ArxivRating id='2504.19413' tldr='经典的可扩展长期记忆的 Production-Ready AI Agents' rank={3}>
+  <img src={'/images/papers/Mem0.webp'} alt='Mem0' class='w-full rounded-lg mb-4' />
+  <p>虽然想说这个工作不够有 insight，但是它很简洁、很适用（换句话说有很多人用，毕竟 GitHub 5万的stars），确实适合用于生产和实践。</p>
+  </ArxivRating>
+
+## PersonaMem-v2
+
+<ArxivRating id='2512.06688' tldr='real world 的隐式个性化测试集' rank={2}>
+  <img src={'/images/papers/PersonaMem-v2.webp'} alt='PersonaMem-v2' class='w-full rounded-lg mb-4' />
+  <p>这篇工作确实补充了隐式个性化 bench 的部分空缺，但是感觉训练中有不少的 tricks (Qwen3-4B 经过 RL 后，还超过 GPT-5)</p>
+  </ArxivRating>
+
+## A-MEM
+
+<ArxivRating id='2502.12110' tldr='real world 的隐式个性化测试集' rank={2}>
+  <img src={'/images/papers/A-MEM.webp'} alt='A-MEM' class='w-full rounded-lg mb-4' />
+  <p>这篇工作做的是比较传统的结构化 Agent Memory，不同的是用了 Zettelkasten (卡片盒笔记法) 作为主要 insight。</p>
+  </ArxivRating>
+
+## MemoryArena
+
+<ArxivRating id='2602.16313' tldr='互相依赖的多会话的“记忆-智能体-环境”循环中 Agent Memory 测试' rank={3}>
+  <img src={'/images/papers/MemoryArena.webp'} alt='MemoryArena' class='w-full rounded-lg mb-4' />
+  <p>这篇工作设置了情境很好，确实击中很多 work 的痛点 -- 多会话中的 Memory 能力，也为后续主次 Agent 的合作打下基础。</p>
+  </ArxivRating>
