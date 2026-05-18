@@ -1,7 +1,7 @@
 ---
 title: "月记-二零二六-五月"
 publishDate: 2026-05-10
-updatedDate: 2026-05-17
+updatedDate: 2026-05-18
 description: "2026/05/01 ~ 2026/05/31"
 category: journal
 tags:
@@ -16,10 +16,10 @@ heroImage:
 ---
 
 import { Aside } from '@/components/user'
-/* - note - 蓝色信息提示
-   - tip - 紫色技巧提示
-   - caution - 黄色警告提示
-   - danger - 红色危险提示 */
+/* - note - 蓝色下周计划
+   - tip - 紫色完成出色
+   - caution - 黄色完成一般
+   - danger - 红色非常糟糕 */
 
 ## 前言
 
@@ -57,7 +57,7 @@ import { Aside } from '@/components/user'
 
 今天也是懒了，本来独属周末的锻炼也睡过去了，悔悔悔QAQ
 
-<Aside type='tip' title='下周计划'>
+<Aside type='note' title='下周计划'>
 刚刚大概算了时间，理想来看下周有43.5h的自由支配时间（除去睡觉、吃饭和上课）
 
 还是和上周一样，每天在每个时间段写一个规划，定一个比较宽松的baseline和突破自我的SOTA任务线。唯一要注意的是，不要忘记每天的英语听力和力扣！！！
@@ -75,7 +75,7 @@ import { Aside } from '@/components/user'
 
 ### 第二周
 05/11 ~ 05/17
-<Aside type='tip' title='上周清单'>
+<Aside type='caution' title='上周清单'>
 先验收一下上周的任务:
 1. 强化学习只学到 DP ，而且 DP 部分还有一些没结尾，经典环境 (悬崖、冰湖) 还没实现。
 2. 目前工作的 related works 写完了，不过 Paper-Reading 还没上传 Blog。还有一些补充 bench 需要实现。
@@ -88,8 +88,25 @@ import { Aside } from '@/components/user'
 
 这周的话，还是比较中规中矩，基本是是按照计划走的，只不过有点高估自己的时间管理能力，事情一多就乱起来了。
 
-不过，值得一说的是，今天 (5.17) 花了将近4个小时，听完了 [对姚顺宇的4小时访谈](https://www.bilibili.com/video/BV1YR5E6EE9o/?spm_id_from=333.1391.0.0&vd_source=09b548343aff62fd78c442b7fba8f167)，感觉对 AI 领域还是有了不一样的看法。上周的我还在追逐时代的主流 -- 疯狂地尝试 World Model 的新方向，不过听 ysy 的访谈，似乎像多模态、具身智能或者 AI4S 这些范式不确定但实操性强的方向，更应该是年轻一辈的选择。然后，现在的 Agent Flow 已经开始强大了，像是 [Terminus-4B](https://arxiv.org/abs/2605.03195) Google 这样的大团队开始下场完善，[Claude实现论文流水线](https://github.com/Imbad0202/academic-research-skills)，Human Researcher 的生存空间又进一步缩减，的确如 ysy 所说，AI 时代不存在个人英雄主义，一切都能由 AI “暴力”完成。对于中国的 AI，服务好C端或许才是真正的出路。
+不过，值得一说的是，今天 (5.17) 花了将近4个小时，听完了 [对姚顺宇的4小时访谈](https://www.bilibili.com/video/BV1YR5E6EE9o/?spm_id_from=333.1391.0.0&vd_source=09b548343aff62fd78c442b7fba8f167)，感觉对 AI 领域还是有了不一样的看法。上周的我还在追逐时代的主流 -- 疯狂地尝试 World Model 的新方向，不过听 ysy 的访谈，似乎像多模态、具身智能或者 AI4S 这些范式不确定但实操性强的方向，更应该是年轻一辈的选择。然后，现在的 Agent Flow 已经开始强大了，像是 [Terminus-4B](https://arxiv.org/abs/2605.03195) Google 这样的大团队开始下场完善，[Claude实现论文流水线](https://github.com/Imbad0202/academic-research-skills)，Human Researcher 的生存空间又进一步缩减，的确如 ysy 所说，AI 时代不存在个人英雄主义，一切都能由 AI “暴力”完成，目前人的价值就在于能否提供 good insights。
 
 与我而言的话，就是可能要考虑后续方向的变动了，大概率会尝试去调研 AI4S 方向，手撕一些多模态方向的代码和项目，学习一下具身的仿真软件……不过这些还是需要大量时间的。
 
 【插一句，写到这里的时候已经0:30了，我为了明天能早起测试 bench，就先去睡了，拜拜，明天见👋】
+
+好了，今早9:20，又开始写计划了。刚刚算了一下这周的时间 (17.5h[平时] + 20h[周末])，感觉这周时间非常的紧，也快要到期末了。加上上周的经验教训，我应该会稍微减少一些科研领域的探索，更多的集中于现有 paper 的完善、RL 的学习以及课内任务的学习。
+
+<Aside type='note' title='下周计划'>
+上周的自由支配时间是 21.5h + 20h (周末)，这周是 17.5h + 20h (周末)，少了一些但是第二次进行系统计划，应该能够更加合适高效。
+
+上周关于 base 和 SOTA 的任务分割做的不好，实现任务也没及时记录，这周需要注意！然后，英语六级考试时间是6.13，需要适当降低刷 LeetCode 的优先级，毕竟六级可能是最后一搏了。
+
+具体验收如下：
+1. 强化学习基础篇 (动态规划、蒙特卡洛方法、时序差分学习) -- 上周布置的太多了，没考虑理解和实践的时间。其实这些应该也搞不完QAQ，但还是避免自己到时候闲下来了。
+2. 跟进熟悉工作以及测试相关 bench。
+3. 数据库 + 操作系统 + 电工学 复习 (优先级提高↑)
+4. 调研 Agent Memory 的工作不会很勤，应该就是把 related works 的部分上传。
+5. 每天先完成英语听力×1 + 阅读×1，再考虑完成 hot100 (不过时间不多，这周大概率刷不了 LeetCode)
+
+周末看情况，有时间就看完《超时空辉夜姬》😘
+</Aside>

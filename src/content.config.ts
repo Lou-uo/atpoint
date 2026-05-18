@@ -49,7 +49,7 @@ const blogEn = defineCollection({
   schema: blogSchema
 })
 
-const collectionSchema = ({ image }: { image: () => any }) =>
+const collectionSchema = () =>
   z.object({
     title: z.string(),
     /** Optional English title used on /en routes */
@@ -59,7 +59,7 @@ const collectionSchema = ({ image }: { image: () => any }) =>
     description_en: z.string().optional(),
     heroImage: z
       .object({
-        src: image(),
+        src: z.string(),
         alt: z.string().optional(),
         inferSize: z.boolean().optional(),
         width: z.number().optional(),

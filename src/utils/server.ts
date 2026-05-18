@@ -12,7 +12,7 @@ export async function getBlogCollection() {
   })
 }
 
-/** 
+/**
  * Get English blog collection with fallback to Chinese version
  * If an English version (index-en.md) doesn't exist, use the Chinese version (index.md)
  */
@@ -21,35 +21,39 @@ export async function getBlogCollectionEn() {
   const englishPosts = await getCollection('blogEn', ({ data }) => {
     return prod ? !data.draft : true
   })
-  
-  // Transform English post IDs from "anygrasp/index-en" to "anygrasp"
-  const transformedEnglishPosts = englishPosts.map(post => ({
-    ...post,
-    id: post.id.replace(/\/index-en$/, '')
-  }))
-  
+
+  // Transform English post IDs - handle both / and \ path separators
+  const transformedEnglishPosts = englishPosts.map(post => {
+    // Replace \ or /index-en at the end
+    const normalizedId = post.id.replace(/[\/\\]index-en$/, '')
+    return {
+      ...post,
+      id: normalizedId
+    }
+  })
+
   // Get all Chinese versions
   const chinesePosts = await getBlogCollection()
-  
+
   // Create a map of English posts by their slug (folder name)
   const englishPostSlugs = new Set(
     transformedEnglishPosts.map(post => {
-      // Extract folder name from id: "anygrasp/index.md" -> "anygrasp"
-      const match = post.id.match(/^(.+?)\/index\.(md|mdx)$/)
+      // Extract folder name from id
+      const match = post.id.match(/^(.+?)[\/\\]index\.(md|mdx)$/)
       return match ? match[1] : post.id
     })
   )
-  
+
   // Add Chinese posts that don't have English versions
   const fallbackPosts = (chinesePosts as any[])
     .filter(post => {
-      // Extract folder name from id: "anygrasp/index.md" -> "anygrasp"
-      const match = post.id.match(/^(.+?)\/index\.(md|mdx)$/)
+      // Extract folder name from id
+      const match = post.id.match(/^(.+?)[\/\\]index\.(md|mdx)$/)
       const slug = match ? match[1] : post.id
       return !englishPostSlugs.has(slug)
     })
     .map(post => post as CollectionEntry<'blogEn'>)
-  
+
   // Combine English posts and fallback Chinese posts
   return [...transformedEnglishPosts, ...fallbackPosts] as CollectionEntry<'blogEn'>[]
 }
@@ -61,27 +65,58 @@ export async function getPostCollections() {
 export async function getPostsForCollection(collection: CollectionEntry<'postCollections'>, isEn: boolean = false) {
   const allPosts = isEn ? await getBlogCollectionEn() : await getBlogCollection()
   const blogList = collection.data.bloglist || []
-  
+
+  // Debug: Log all posts and blogList
+  console.log('=== getPostsForCollection Debug ===')
+  console.log('blogList from collection:', blogList)
+  console.log('All posts IDs:', allPosts.map(p => p.id))
+
+  // Normalize path: convert separators, lowercase, and replace spaces with hyphens
+  const normalizePath = (path: string) => 
+    path.replace(/\\/g, '/').toLowerCase().replace(/\s+/g, '-')
+
   // Create a mapping of possible IDs (lowercased) to posts for quick lookup
   const postMap = new Map<string, BlogPostEntry>()
   allPosts.forEach(post => {
     // Standard ID
-    postMap.set(post.id.toLowerCase(), post)
-    
-    // Normalized ID (without extension/index)
-    const match = post.id.match(/^(.+?)\/index\.(md|mdx)$/)
+    postMap.set(normalizePath(post.id), post)
+
+    // Normalized ID (without extension/index) - handle both / and \ path separators
+    const match = post.id.match(/^(.+?)[\/\\]index\.(md|mdx)$/)
     if (match) {
-      postMap.set(match[1].toLowerCase(), post)
-    } else {
-      // Also try to remove extension if it's not index
-      postMap.set(post.id.replace(/\.(md|mdx)$/, '').toLowerCase(), post)
+      const slug = match[1]
+      postMap.set(normalizePath(slug), post)
     }
   })
 
+  console.log('postMap keys:', Array.from(postMap.keys()))
+
   // Map the blogList to actual post entries, preserving blogList order
-  return blogList
-    .map(itemId => postMap.get(itemId.toLowerCase()))
+  const result = blogList
+    .map(itemId => {
+      const normalizedId = normalizePath(itemId)
+      console.log(`Looking for: "${itemId}" -> normalized: "${normalizedId}"`)
+      
+      // First try exact match
+      let found = postMap.get(normalizedId)
+      
+      // If not found, try to match by checking if post.id contains the itemId
+      if (!found) {
+        for (const [key, post] of postMap.entries()) {
+          if (key.includes(normalizedId) || normalizedId.includes(key)) {
+            found = post
+            break
+          }
+        }
+      }
+      
+      console.log(`Found:`, found ? found.id : 'undefined')
+      return found
+    })
     .filter((post): post is BlogPostEntry => post !== undefined)
+
+  console.log('=== End Debug ===')
+  return result
 }
 
 function getYearFromCollection(

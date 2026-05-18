@@ -27,6 +27,8 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
 }
 
 const collectionUrl = getLocalizedUrl(Astro.currentLocale, `/collection/${id}`)
+
+const isExternalImage = data.heroImage?.src?.startsWith('http')
 ---
 
 {
@@ -61,13 +63,23 @@ const collectionUrl = getLocalizedUrl(Astro.currentLocale, `/collection/${id}`)
       <div class='flex flex-col'>
         {data.heroImage ? (
           <div class='group/img relative aspect-video w-full overflow-hidden'>
-            <Image
-              src={data.heroImage.src}
-              alt={data.heroImage.alt || title}
-              width={data.heroImage.width || 1200}
-              height={data.heroImage.height || 630}
-              class='h-full w-full object-cover transition-all duration-300 brightness-[0.8] group-hover/img:brightness-90'
-            />
+            {isExternalImage ? (
+              <Image
+                src={data.heroImage.src}
+                alt={data.heroImage.alt || title}
+                width={data.heroImage.width || 1200}
+                height={data.heroImage.height || 630}
+                class='h-full w-full object-cover transition-all duration-300 brightness-[0.8] group-hover/img:brightness-90'
+              />
+            ) : (
+              <img
+                src={data.heroImage.src}
+                alt={data.heroImage.alt || title}
+                width={data.heroImage.width || 1200}
+                height={data.heroImage.height || 630}
+                class='h-full w-full object-cover transition-all duration-300 brightness-[0.8] group-hover/img:brightness-90'
+              />
+            )}
             <div class='absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4'>
               <h2 class='line-clamp-2 text-xl font-semibold text-white'>{title}</h2>
               {description && (
