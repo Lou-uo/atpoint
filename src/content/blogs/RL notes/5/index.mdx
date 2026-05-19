@@ -1,0 +1,144 @@
+---
+title: "RL学习笔记（5）:蒙特卡洛方法"
+publishDate: 2026-05-19
+updatedDate: 2026-05-19
+description: 蒙特卡洛方法（Monte Carlo Methods）
+category: research
+tags:
+  - reinforcement learning
+language: zh
+heroImage:
+  src: src/assets/webp2research/RL-5.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #7E81CA, #DA9886, #5BE9FF)'
+---
+
+import { Aside } from '@/components/user'
+/* - note - 蓝色信息提示
+   - tip - 紫色技巧提示
+   - caution - 黄色警告提示
+   - danger - 红色危险提示 */
+
+## 引言
+
+**蒙特卡洛 (Monte Carlo, MC) 方法** 是一大类依赖于 **重复随机抽样** 来获取数值近似解的计算技术。在强化学习 (RL) 领域，蒙特卡洛方法特指一类 **无模型 (Model-Free)** 的学习算法，它们直接从与环境交互得到的 **完整经验片段 (Complete Episodes)** 中学习价值函数和策略，而不需要关于环境动态 (如状态转移概率 $\mathcal{P}$ 和奖励函数 $\mathcal{R}$) 的先验知识。
+
+**核心思想**: MC 方法利用 **大数定律**，通过计算许多样本回报的 **平均值 (Mean Sample Return)** 来估计期望回报，也就是状态或动作的 **价值 (Value)**。
+
+**基本要求**: MC 方法直接适用于 **分幕式任务 (Episodic Tasks)**，因为它们需要等待一个完整的片段结束后才能计算该片段中每个时间步的 **回报 (Return, $G_t$)**。
+
+**学习内容**: 
+1. **MC 预测 (Prediction)**: 给定一个策略 $\pi$，估计其价值函数 $v_\pi$ 或 $q_\pi$。
+2. **MC 控制 (Control)**: 寻找最优策略 $\pi_*$。
+
+## 蒙特卡洛预测 (MC Prediction)
+
+**目标**: 给定策略 $\pi$，从遵循该策略生成的经验片段中估计其 **状态价值函数 $v_\pi(s)$** 或 **动作价值函数 $q_\pi(s, a)$**。
+
+**基本原理**: 价值函数定义为期望回报: $v_\pi(s) = \mathbb{E}_{\pi}[G_t | S_t = s]$ (状态价值) 或 $q_\pi(s, a) = \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a]$ (动作价值)。MC 方法通过收集大量样本回报并计算其平均值来近似这个期望。
+
+- 对于 $v_\pi(s)$: 收集策略 $\pi$ 下多个片段中，所有访问状态 $s$ 之后直到片段结束的回报 $G_t^{(i)}$，然后求平均。
+    $$
+    V(s) \approx \frac{\sum_{i} G_t^{(i)}}{N(s)}, \text{where } S_t^{(i)} = s
+    $$
+    其中 $N(s)$ 是访问状态 $s$ 的被访问的总次数 (根据首次 / 每次访问定义)。
+
+- 对于 $q_\pi(s, a)$: 类似地，收集所有访问状态-动作对 (s, a) 之后的回报 $G_t^{(j)}$，然后求平均。
+    $$
+    Q(s, a) \approx \frac{\sum_{j} G_t^{(j)}}{N(s, a)}, \text{where } S_t^{(j)} = s, A_t^{(j)} = a
+    $$
+
+**首次访问 (First-Visit) vs 每次访问 (Every-Visit)**: 在一个片段中，某个状态 $s$ (或状态-动作对 $(s, a)$) 可能被访问多次。
+    - **首次访问 MC**: 对于每个片段，只使用该片段中状态 $s$ (或对 $(s, a)$) **第一次** 被访问时之后的回报 $G_t$ 来更新价值估计。
+    - **每次访问 MC**: 对于每个片段，使用该片段中状态 $s$ (或对 $(s, a)$) **每一次** 被访问时之后的回报 $G_t$ 来更新价值估计。
+    - 理论上，在无限数据下，两者都会收敛到真实的价值函数。首次访问 MC 在理论分析上更常用，且某些情况下方差可能更低。
+
+**算法: 首次访问 MC 预测 (用于估计 $v_\pi$)**
+```
+初始化:
+  对于所有状态 s ∈ S:
+    V(s) ← 任意值 (通常为 0)
+    Returns(s) ← 空列表
+
+循环 对每个 episode:
+  生成一个 episode 遵循策略 π: S₀, A₀, R₁, S₁, A₁, R₂, ..., S_{T-1}, A_{T-1}, R_T
+  G ← 0
+  VisitedStates ← 空集合  // 记录本片段已访问的状态 (用于首次访问)
+
+  循环 对于 t = T-1, T-2, ..., 0:
+    G ← R_{t+1} + γ * G
+    如果 S_t 不在 VisitedStates 中:
+      将 G 添加到 Returns(S_t) 列表
+
+      1. 计算回报平均值
+      V(S_t) ← Average(Returns(S_t))  // 计算列表的平均值
+
+      2. 增量式更新 (减少内存开销)
+      N(S_t) ← N(S_t) + 1
+      V(S_t) ← V(S_t) + (1/N(S_t)) * (G - V(S_t))  # 增量更新
+
+      3. 固定步长更新 (环境非平稳)
+      V(S_t) ← V(S_t) + α * (G - V(S_t))  # α ∈ (0,1]
+
+      将 S_t 添加到 VisitedStates
+```
+ 
+**增量式实现 (Incremental Implementation)**: 为了节省内存，避免存储所有回报，可以使用增量式更新 (运行平均) : 对于状态 $s$ (或对 $(s, a)$) 的第 $N$ 次 (首次 / 每次) 访问，得到回报 $G$:
+    $$
+    N(s) ← N(s) + 1 \\
+    V(s) \leftarrow V(s) + \frac{G - V(s)}{N}（或 Q(s, a) \leftarrow Q(s, a) + \frac{G - Q(s, a)}{N(s, a)}）
+    $$
+或者使用**常数步长**$\alpha \in (0, 1]$，这有助于处理非平稳环境(奖励或动态随时间变化)或作为一种指数加权平均:
+    $$
+    V(s) \leftarrow V(s) + \alpha (G - V(s))（或 Q(s, a) \leftarrow Q(s, a) + \alpha (G - Q(s, a))）
+    $$
+
+## 蒙特卡洛控制 (MC Control)
+
+**目标**: 在不知道环境模型的情况下，找到最优策略 $\pi_*$。
+
+**基于动作价值 (Action-Value Q)**: 在无模型情况下，仅仅知道状态价值 $V(s)$ 不足以改进策略，因为我们无法进行一步预测来比较不同动作的优劣 (这需要模型 $\mathcal{P}$ 和 $\mathcal{R}$)。因此，MC 控制方法通常直接估计 **动作价值函数 $Q(s, a)$**，然后基于 $Q$ 值来改进策略。
+
+**框架: 广义策略迭代 (GPI)**: MC 控制遵循 GPI 的模式: 不断交替执行 **策略评估** 和 **策略改进**。
+
+- **评估 (E)**: 使用 MC 预测方法 (如首次访问 MC) 估计当前策略 $\pi$ 的动作价值函数 $Q \approx q_\pi$。
+- **改进 (I)**: 基于当前的 $Q$ 值使策略 $\pi$ 变得更贪心。例如，对于每个状态 $s$，将策略更新为选择具有最高估计值的动作: $\pi(s) \leftarrow \arg \max_{a} Q(s, a)$。
+
+**核心挑战: 维持探索 (Maintaining Exploration)**: 如果策略在改进步骤中变得完全贪心 (确定性策略)，智能体可能会停止探索某些状态-动作对。如果未被探索的 $(s, a)$ 对恰好是最优策略的一部分，那么算法将永远无法发现真正的最优策略。MC 方法依赖于持续不断地访问所有需要评估其价值的状态-动作对。
+
+**解决方案 (A): 试探性出发 (Exploring Starts, ES)** - 理论方法
+
+- **假设**: 每次开始一个新片段时，我们能够以非零概率随机选择 **任意一个** 状态-动作对 $(S_0, A_0)$ 作为起点。
+- **算法: 带 ES 的 MC 控制**
+
+```
+初始化:
+  对于所有状态 s ∈ S, 所有动作 a ∈ A(s):
+    Q(s, a) ← 任意值 (通常为 0)
+    Returns(s, a) ← 空列表
+  对于所有状态 s ∈ S:
+    π(s) ← 任意确定性动作从 A(s) 中选择
+
+循环 无限次:
+  选择起始状态 S₀ 和 起始动作 A₀，确保所有 (s, a) 都有非零概率被选为起点 (ES 假设)
+  从 (S₀, A₀) 开始, 之后遵循策略 π 生成一个 episode: S₀, A₀, R₁, ..., S_{T-1}, A_{T-1}, R_T
+  G ← 0
+  VisitedPairs ← 空集合 // 记录首次访问的 (s, a) 对
+
+  循环 对于 t = T-1, T-2, ..., 0:
+    G ← R_{t+1} + γ * G
+    令 Pair = (S_t, A_t)
+
+    如果 Pair 不在 VisitedPairs 中:
+      将 G 添加到 Returns(Pair) 列表
+      Q(Pair) ← Average(Returns(Pair))  // (E) 策略评估
+
+      // (I) 策略改进：更新状态 S_t 的策略
+      π(S_t) ← argmax_{a' ∈ A(S_t)} Q(S_t, a')
+
+      将 Pair 添加到 VisitedPairs
+```
+- **优点**: 在 ES 假设下，保证收敛到最优策略 $\pi_*$ 和最优动作价值 $q_*$。
+- **缺点**: ES 假设在许多实际问题中不现实 (例如，机器人不能随意瞬移到任意状态并执行任意动作)。
