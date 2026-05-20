@@ -1,7 +1,7 @@
 ---
 title: "RL学习笔记（5）:蒙特卡洛方法"
 publishDate: 2026-05-19
-updatedDate: 2026-05-19
+updatedDate: 2026-05-21
 description: 蒙特卡洛方法（Monte Carlo Methods）
 category: research
 tags:
@@ -142,3 +142,59 @@ import { Aside } from '@/components/user'
 ```
 - **优点**: 在 ES 假设下，保证收敛到最优策略 $\pi_*$ 和最优动作价值 $q_*$。
 - **缺点**: ES 假设在许多实际问题中不现实 (例如，机器人不能随意瞬移到任意状态并执行任意动作)。
+
+**解决方案 (B): 维持策略本身的探索性**
+
+- **核心思想**: 不依赖 ES，而是确保用于生成数据的策略本身始终保持一定的探索性。
+- **同轨策略 (On-Policy) vs 离轨策略 (Off-Policy)**:
+  - **同轨策略学习**: 学习和改进的策略，与用于生成经验数据的策略是 **同一个**。
+  - **离轨策略学习**: 学习和改进的策略 (**目标策略 $\pi$**)，与用于生成经验数据的策略 (行为策略 $b$) **不同**。
+- $\epsilon$-软性策略 ($\epsilon$-Soft Policies): 为保证持续探索，同轨方法通常采用 $\epsilon$-软性策略，即对于所有状态 $s$ 和动作 $a$，策略选择该动作的概率 $\pi(a|s) \ge \frac{\epsilon}{|\mathcal{A}(s)|} > 0$。这意味着每个动作始终有至少 $\frac{\epsilon}{|\mathcal{A}(s)|}$ 的概率被选中。
+- $\epsilon$-贪心策略 ($\epsilon$-Greedy Policies): 是实现 $\epsilon$-软性的一种常用策略。
+  - 以 1 - $\epsilon$ 的概率选择当前认为最优的动作 (即 $\arg \max_{a} Q(s, a)$)。
+  - 以 $\epsilon$ 的概率从所有 $|\mathcal{A}(s)|$ 个可用动作中 (包括最优动作) 均匀随机选择一个。
+
+**算法: 同轨首次访问 MC 控制 (使用 $\epsilon$-Greedy)**
+```
+初始化:
+  对于所有状态 s ∈ S, 所有动作 a ∈ A(s):
+    Q(s, a) ← 任意值 (通常为 0)
+    Returns(s, a) ← 空列表
+  初始化策略 π 为关于 Q 的 ε-greedy 策略
+
+循环 无限次:
+  (a) 使用当前策略 π 生成一个 episode: S₀, A₀, R₁, ..., S_{T-1}, A_{T-1}, R_T
+  G ← 0
+  VisitedPairs ← 空集合
+
+  (b) 循环 对于 t = T-1, T-2, ..., 0:
+    G ← R_{t+1} + γ * G
+    令 Pair = (S_t, A_t)
+
+    如果 Pair 不在 VisitedPairs 中:
+      将 G 添加到 Returns(Pair) 列表
+      Q(Pair) ← Average(Returns(Pair))  // (E) 策略评估
+      // 也可以用增量式更新
+
+      // (c) 策略改进: 确保状态 S_t 的策略是关于更新后 Q 的 ε-greedy
+      // (隐式或显式更新 π(·|S_t))
+      令 A* = argmax_{a' ∈ A(S_t)} Q(S_t, a')
+      对于所有动作 a ∈ A(S_t):
+        如果 a = A*:
+          π(a|S_t) ← 1 - ε + ε / |A(S_t)| ← 最优动作的概率
+        否则:
+          π(a|S_t) ← ε / |A(S_t)|         ← 非最优动作的概率
+
+      将 Pair 添加到 VisitedPairs
+```
+- **收敛性**: 同轨 MC 控制 (使用 $\epsilon$-Greedy) 会收敛到最优的 $\epsilon$-贪心策略，而不是真正的最优策略 $\pi_*$ (因为 $\epsilon > 0$ 导致它永远在探索)。不过，这个策略通常也相当好。可以通过逐渐减小 $\epsilon$ 值 (例如 $\epsilon_k = 1/k$) 来使其在极限情况下趋近于最优策略 (GLIE - Greedy in the Limit with Infinite Exploration)。
+- **策略改进保证**: 可以证明，对于任意 $\epsilon$-贪心策略 $\pi$，基于其动作价值 $q_\pi$ 进行 $\epsilon$-贪心选择得到的新策略 $\pi'$，仍然满足 $v_{\pi'}(s) \ge v_{\pi}(s)$ 对所有状态 $s$ 成立。这保证了 GPI 过程的单调性。
+
+## 离轨策略蒙特卡洛方法 (Off-Policy MC)
+
+同轨策略 MC 为了保证探索，最终学习到的只是一个 $\epsilon$-软性策略。**离轨策略学习** 的目标是: 使用一个具有 **探索性的行为策略 $b$ (Behavior Policy)** 来生成数据，但学习和评估的是一个不同的、通常是确定性的贪心策略——**目标策略 $\pi$ (Target Policy)**。
+
+**优点**:
+
+- 可以学习最优的确定性策略 $\pi_*$ (目标策略)，同时通过行为策略 $b$ 保证充分的探索。
+- 更灵活，允许从历史数据、人类演示或智能体的经验中学习。
