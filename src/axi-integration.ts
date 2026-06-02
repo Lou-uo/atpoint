@@ -19,13 +19,13 @@ export default function AstroAxiIntegration(opts: UserInputConfig): AstroIntegra
   let remarkPlugins: RemarkPlugins = []
   let rehypePlugins: RehypePlugins = []
   return {
-    name: 'astro-axi',
+    name: 'astro-atpoint',
     hooks: {
       'astro:config:setup': async ({ config, updateConfig }) => {
         let userConfig = parseWithFriendlyErrors(
           UserConfigSchema,
           opts,
-          'Invalid config passed to astro-axi integration'
+          'Invalid config passed to astro-atpoint integration'
         )
 
         // Add built-in integrations only if they are not already added by the user through the
