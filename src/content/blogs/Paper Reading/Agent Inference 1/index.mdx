@@ -1,0 +1,53 @@
+---
+title: "Paper Reading: Agent Inference 1"
+publishDate: 2026-06-21
+updatedDate: 2026-06-21
+description: 整理最近 Agent Inference 领域的好文
+category: research
+tags:
+  - paper reading
+  - agent inference
+language: zh
+draft: false
+heroImage:
+  src: src/assets/webp2research/Agent-Inference-1.webp
+  alt: Hero Image
+  width: 1200
+  height: 630
+  color: 'linear-gradient(135deg, #FFE7D0, #FFCD97, #F7784A)'
+---
+
+import { ArxivRating } from '@/components/advanced'
+import { Aside } from '@/components/user'
+
+<Aside type='default' title='评分准则'>
+  <div class='space-y-2'>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★</span><span class='text-gray-400'>☆☆☆☆</span>
+      <span>平平无奇的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★</span><span class='text-gray-400'>☆☆☆</span>
+      <span>正常的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★</span><span class='text-gray-400'>☆☆</span>
+      <span>广受认可或者让我眼前一亮的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★★</span><span class='text-gray-400'>☆</span>
+      <span>奠基性的论文或者我非常喜欢的论文</span>
+    </div>
+    <div class='flex items-center gap-2'>
+      <span class='text-yellow-500'>★★★★★</span>
+      <span>毋庸置疑的最棒的论文</span>
+    </div>
+  </div>
+</Aside>
+
+## AgileThinker
+
+<ArxivRating id='2511.04898' tldr='动态环境实时推理' rank={3}>
+  <img src={'/images/papers/AgileThinker.webp'} alt='AgileThinker' class='w-full rounded-lg mb-4' />
+  <p>将 Planning 和 Reactive 线程通过异步并行的方式实现协同，让 Reactive 线程能读到 Planning 线程未完成的中间思考，并结合环境动态变化进行动作输出。</p>
+  </ArxivRating>

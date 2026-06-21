@@ -1,0 +1,19 @@
+0 verbose cli D:\Node.js\node.exe D:\Node.js\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.13.0
+2 info using node@v24.16.0
+3 silly config load:file:D:\Node.js\node_modules\npm\npmrc
+4 silly config load:file:D:\GitHub\atpoint\.npmrc
+5 silly config load:file:C:\Users\HUAWEI\.npmrc
+6 silly config load:file:D:\Node.js\node_global'\etc\npmrc
+7 verbose title npm cache clean
+8 verbose argv "cache" "clean" "--force"
+9 verbose logfile logs-max:10 dir:d:\GitHub\atpoint\.npm-cache\_logs\2026-06-09T02_57_30_148Z-
+10 verbose logfile d:\GitHub\atpoint\.npm-cache\_logs\2026-06-09T02_57_30_148Z-debug-0.log
+11 warn using --force Recommended protections disabled.
+12 silly logfile done cleaning log files
+13 verbose cwd D:\GitHub\atpoint
+14 verbose os Windows_NT 10.0.22631
+15 verbose node v24.16.0
+16 verbose npm  v11.13.0
+17 verbose exit 0
+18 info ok

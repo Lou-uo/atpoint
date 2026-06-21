@@ -1,0 +1,66 @@
+0 verbose cli D:\Node.js\node.exe D:\Node.js\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.13.0
+2 info using node@v24.16.0
+3 silly config load:file:D:\Node.js\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\HUAWEI\.npmrc
+5 silly config load:file:D:\Node.js\node_global'\etc\npmrc
+6 verbose title npm install pnpm
+7 verbose argv "install" "--global" "pnpm" "--cache" "D:temp-npm-cache"
+8 verbose logfile logs-max:10 dir:D:\GitHub\atpoint\temp-npm-cache\_logs\2026-06-09T02_57_56_096Z-
+9 verbose logfile D:\GitHub\atpoint\temp-npm-cache\_logs\2026-06-09T02_57_56_096Z-debug-0.log
+10 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+11 silly logfile done cleaning log files
+12 silly idealTree buildDeps
+13 silly fetch manifest pnpm@*
+14 silly packumentCache full:https://registry.npmjs.org/pnpm cache-miss
+15 http fetch GET 200 https://registry.npmjs.org/npm 1401ms
+16 http fetch GET 200 https://registry.npmjs.org/pnpm 1769ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/pnpm set size:undefined disposed:false
+18 silly placeDep ROOT pnpm@11.5.2 OK for:  want: *
+19 silly reify moves {}
+20 verbose stack Error: EPERM: operation not permitted, mkdir 'D:\Node.js\node_global'\node_modules\pnpm'
+20 verbose stack     at async mkdir (node:internal/fs/promises:859:10)
+20 verbose stack     at async D:\Node.js\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:585:20
+20 verbose stack     at async Promise.allSettled (index 0)
+20 verbose stack     at async #reifyPackages (D:\Node.js\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:317:11)
+20 verbose stack     at async Arborist.reify (D:\Node.js\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:127:5)
+20 verbose stack     at async Install.exec (D:\Node.js\node_modules\npm\lib\commands\install.js:146:5)
+20 verbose stack     at async Npm.exec (D:\Node.js\node_modules\npm\lib\npm.js:193:9)
+20 verbose stack     at async module.exports (D:\Node.js\node_modules\npm\lib\cli\entry.js:67:5)
+21 error code EPERM
+22 error syscall mkdir
+23 error path D:\Node.js\node_global'\node_modules\pnpm
+24 error errno -4048
+25 error Error: EPERM: operation not permitted, mkdir 'D:\Node.js\node_global'\node_modules\pnpm'
+25 error     at async mkdir (node:internal/fs/promises:859:10)
+25 error     at async D:\Node.js\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:585:20
+25 error     at async Promise.allSettled (index 0)
+25 error     at async #reifyPackages (D:\Node.js\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:317:11)
+25 error     at async Arborist.reify (D:\Node.js\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:127:5)
+25 error     at async Install.exec (D:\Node.js\node_modules\npm\lib\commands\install.js:146:5)
+25 error     at async Npm.exec (D:\Node.js\node_modules\npm\lib\npm.js:193:9)
+25 error     at async module.exports (D:\Node.js\node_modules\npm\lib\cli\entry.js:67:5) {
+25 error   errno: -4048,
+25 error   code: 'EPERM',
+25 error   syscall: 'mkdir',
+25 error   path: "D:\\Node.js\\node_global'\\node_modules\\pnpm"
+25 error }
+26 error
+26 error The operation was rejected by your operating system.
+26 error It's possible that the file was already in use (by a text editor or antivirus), or that you lack permissions to access it.
+26 error
+26 error If you believe this might be a permissions issue, please double-check the permissions of the file and its containing directories, or try running the command again as root/Administrator.
+27 silly unfinished npm timer reify 1780973876337
+28 silly unfinished npm timer reify:createSparse 1780973878158
+29 verbose cwd D:\GitHub\atpoint
+30 verbose os Windows_NT 10.0.22631
+31 verbose node v24.16.0
+32 verbose npm  v11.13.0
+33 notice
+33 notice New minor version of npm available! 11.13.0 -> 11.16.0
+33 notice Changelog: https://github.com/npm/cli/releases/tag/v11.16.0
+33 notice To update run: npm install -g npm@11.16.0
+33 notice  { force: true, Symbol(proc-log.meta): true }
+34 verbose exit -4048
+35 verbose code -4048
+36 error A complete log of this run can be found in: D:\GitHub\atpoint\temp-npm-cache\_logs\2026-06-09T02_57_56_096Z-debug-0.log
