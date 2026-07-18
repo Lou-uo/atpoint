@@ -1,0 +1,24 @@
+<div class='home-backdrop' aria-hidden='true'>
+  <div class='backdrop-glow glow-one'></div>
+  <div class='backdrop-glow glow-two'></div>
+  <div class='backdrop-grid'></div>
+  <div class='backdrop-particles'>
+    {Array.from({ length: 24 }).map((_, index) => (
+      <span style={`--x:${(index * 41) % 100}%; --y:${(index * 67) % 100}%; --delay:${(index % 8) * 1.2}s; --size:${2 + (index % 3)}px;`} />
+    ))}
+  </div>
+</div>
+
+<style>
+  .home-backdrop { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; background:linear-gradient(135deg,hsl(215 45% 97%),hsl(250 45% 97%) 48%,hsl(220 42% 96%)); }
+  .dark .home-backdrop { background:linear-gradient(135deg,hsl(224 32% 10%),hsl(252 28% 13%) 48%,hsl(220 30% 9%)); }
+  .backdrop-glow { position:absolute; width:42rem; height:32rem; border-radius:999px; filter:blur(70px); opacity:.22; animation:drift 24s ease-in-out infinite alternate; }
+  .glow-one { left:-12rem; top:-12rem; background:hsl(218 85% 70%); }
+  .glow-two { right:-14rem; bottom:-12rem; background:hsl(263 75% 75%); animation-delay:-8s; }
+  .dark .backdrop-glow { opacity:.15; }
+  .backdrop-grid { position:absolute; inset:0; opacity:.16; background-image:linear-gradient(hsl(var(--primary)/.08) 1px,transparent 1px),linear-gradient(90deg,hsl(var(--primary)/.08) 1px,transparent 1px); background-size:72px 72px; mask-image:radial-gradient(ellipse at center,black,transparent 72%); }
+  .backdrop-particles span { position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:hsl(var(--primary)/.3); box-shadow:0 0 12px hsl(var(--primary)/.25); animation:twinkle 7s ease-in-out var(--delay) infinite; }
+  @keyframes drift { to { transform:translate(8rem,5rem) scale(1.12); } }
+  @keyframes twinkle { 0%,100% { opacity:.15; transform:translateY(0); } 50% { opacity:.65; transform:translateY(-14px); } }
+  @media (prefers-reduced-motion:reduce) { .backdrop-glow,.backdrop-particles span { animation:none; } }
+</style>

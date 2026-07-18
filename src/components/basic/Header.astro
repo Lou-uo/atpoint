@@ -163,11 +163,6 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
       // Dark Mode
       const darkModeBtn = this.querySelector('#toggleDarkMode') as HTMLElement
       darkModeBtn.addEventListener('click', () => {
-        // Old way: dispatch event
-        // const toggleDarkModeEvent = new CustomEvent('theme-change', {
-        //   detail: { theme: localStorage.getItem('theme') === 'light' ? 'dark' : 'light' }
-        // })
-        // document.dispatchEvent(toggleDarkModeEvent)
         const newTheme = setTheme(undefined, true)
         darkModeBtn.dataset.theme = newTheme
         showToast({ message: `Set theme to ${newTheme}` })
@@ -261,22 +256,8 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
 
   /* dark light mode toggle */
   #toggleDarkMode {
-    &[data-theme='dark'] {
-      & .system {
-        display: none;
-      }
-      & .dark {
-        display: block;
-      }
-    }
-    &[data-theme='light'] {
-      & .system {
-        display: none;
-      }
-      .light {
-        display: block;
-      }
-    }
+    &[data-theme='dark'] { & .system { display: none; } & .dark { display: block; } }
+    &[data-theme='light'] { & .system { display: none; } .light { display: block; } }
   }
 
   /* Dropdown menu styles */

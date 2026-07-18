@@ -3,6 +3,8 @@ import BaseHead from '@/components/BaseHead.astro'
 import config from '@/site-config'
 
 import { Footer, Header, ThemeProvider } from '@/components/basic'
+import Sakura from '@/components/home/Sakura.astro'
+import HomeBackdrop from '@/components/home/HomeBackdrop.astro'
 import type { SiteMeta } from '@/types'
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseLayout /> component.
@@ -11,11 +13,13 @@ import '@/assets/styles/app.css'
 interface Props {
   meta: SiteMeta
   highlightColor?: string
+  sakura?: boolean
 }
 
 const {
   meta: { articleDate, description = config.description, ogImage, title },
-  highlightColor
+  highlightColor,
+  sakura = true
 } = Astro.props
 
 const currentLocale = Astro.currentLocale || 'zh'
@@ -40,6 +44,8 @@ const langAttr = currentLocale === 'en' ? 'en' : 'zh'
   </head>
 
   <body class='flex justify-center bg-background'>
+    {sakura && <HomeBackdrop />}
+    {sakura && <Sakura />}
     <!-- <div
       id='gradient-background'
       class='pointer-events-none fixed h-screen w-screen blur-2xl transition-opacity duration-1000'

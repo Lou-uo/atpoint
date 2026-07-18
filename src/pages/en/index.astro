@@ -7,6 +7,7 @@ import Section from '@/components/home/Section.astro'
 import avatar from '@/assets/avatar.png'
 import config from '@/site-config'
 import GitHubActivityCalendar from '@/components/home/GitHubActivityCalendar.astro'
+import FeaturedPosts from '@/components/home/FeaturedPosts.astro'
 ---
 
 <PageLayout meta={{ title: 'Home' }} highlightColor='#659EB966'>
@@ -69,6 +70,7 @@ import GitHubActivityCalendar from '@/components/home/GitHubActivityCalendar.ast
       <Section title='Statistics'>
         <BlogStats blogStartDate={config.personal?.blogStartDate ? new Date(config.personal.blogStartDate) : new Date('2024-06-15')} />
       </Section>
+      <FeaturedPosts title='Latest Articles' viewAllHref='/en/blog/research' viewAllLabel='View all' locale='en' />
       {config.personal?.githubUsername && (
         <GitHubActivityCalendar username={config.personal.githubUsername}/>
       )}
