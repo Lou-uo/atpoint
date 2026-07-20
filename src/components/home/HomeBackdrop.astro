@@ -11,11 +11,13 @@
 
 <style>
   .home-backdrop { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; background:linear-gradient(135deg,hsl(215 45% 97%),hsl(250 45% 97%) 48%,hsl(220 42% 96%)); }
-  .dark .home-backdrop { background:linear-gradient(135deg,hsl(224 32% 10%),hsl(252 28% 13%) 48%,hsl(220 30% 9%)); }
+  :global(.dark) .home-backdrop { background-color:hsl(224 38% 7%); background-image:radial-gradient(circle at 15% 18%,rgb(151 204 255 / .42) 0 1.5px,transparent 2.5px),radial-gradient(circle at 78% 24%,rgb(181 216 255 / .45) 0 1.5px,transparent 2.5px),radial-gradient(circle at 42% 68%,rgb(125 183 255 / .38) 0 1.5px,transparent 2.5px),radial-gradient(circle at 88% 82%,rgb(205 230 255 / .42) 0 1.5px,transparent 2.5px),linear-gradient(135deg,hsl(224 38% 7%),hsl(243 35% 12%) 48%,hsl(220 38% 7%)); background-size:220px 220px,310px 310px,180px 180px,270px 270px,100% 100%; }
   .backdrop-glow { position:absolute; width:42rem; height:32rem; border-radius:999px; filter:blur(70px); opacity:.22; animation:drift 24s ease-in-out infinite alternate; }
   .glow-one { left:-12rem; top:-12rem; background:hsl(218 85% 70%); }
   .glow-two { right:-14rem; bottom:-12rem; background:hsl(263 75% 75%); animation-delay:-8s; }
-  .dark .backdrop-glow { opacity:.15; }
+  :global(.dark) .backdrop-glow { opacity:.15; }
+  :global(.dark) .backdrop-grid { opacity:.06; }
+  :global(.dark) .backdrop-particles span { background:rgb(181 220 255 / .85); box-shadow:0 0 16px rgb(91 165 255 / .75); }
   .backdrop-grid { position:absolute; inset:0; opacity:.16; background-image:linear-gradient(hsl(var(--primary)/.08) 1px,transparent 1px),linear-gradient(90deg,hsl(var(--primary)/.08) 1px,transparent 1px); background-size:72px 72px; mask-image:radial-gradient(ellipse at center,black,transparent 72%); }
   .backdrop-particles span { position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:hsl(var(--primary)/.3); box-shadow:0 0 12px hsl(var(--primary)/.25); animation:twinkle 7s ease-in-out var(--delay) infinite; }
   @keyframes drift { to { transform:translate(8rem,5rem) scale(1.12); } }

@@ -114,6 +114,25 @@ const langAttr = currentLocale === 'en' ? 'en' : 'zh'
           hsl(var(--primary) / var(--tw-text-opacity))
         ) !important;
       }
+      :global(.dark header-component.not-top) {
+        border-color: hsl(215 70% 55% / .28);
+        box-shadow: 0 0 22px hsl(215 80% 60% / .1), 0 10px 24px rgb(0 0 0 / .2);
+      }
+      :global(.dark .border-border) {
+        border-color: hsl(215 75% 65% / .22);
+        box-shadow: 0 0 18px hsl(215 75% 60% / .1);
+      }
+      :global(.dark .bg-card),
+      :global(.dark article),
+      :global(.dark section),
+      :global(.dark [class*='rounded-2xl']),
+      :global(.dark [class*='rounded-xl']) {
+        box-shadow: 0 0 24px hsl(215 80% 60% / .07);
+      }
+      :global(.dark button),
+      :global(.dark a[class*='border']) {
+        border-color: hsl(215 75% 65% / .2);
+      }
 
       /* 点击粒子效果样式 */
       :global(.click-particle) {

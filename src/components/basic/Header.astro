@@ -256,6 +256,8 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
 
   /* dark light mode toggle */
   #toggleDarkMode {
+    & .light { color: #f59e0b; }
+    & .dark { color: #60a5fa; }
     &[data-theme='dark'] { & .system { display: none; } & .dark { display: block; } }
     &[data-theme='light'] { & .system { display: none; } .light { display: block; } }
   }
