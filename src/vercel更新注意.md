@@ -7,7 +7,7 @@
 2. `git add .`
    - 加入更新内容
 3. `git commit -m "输入更新批注"`
-4. `git pull origin main`
+4. `git pull origin main`（可选
    - 如果需要进行线上同步
 
 5. `git push origin main`
@@ -26,7 +26,7 @@ https://vercel.com/lou-uos-projects
 打开终端，输入
 
 ```cmd
-pnpm install astro
+pnpm install astro (可选)
 pnpm dev
 ```
 
