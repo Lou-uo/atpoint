@@ -1,0 +1,24 @@
+0 verbose cli D:\Node.js\node.exe D:\Node.js\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.13.0
+2 info using node@v24.16.0
+3 silly config load:file:D:\Node.js\node_modules\npm\npmrc
+4 silly config load:file:D:\GitHub\atpoint\.npmrc
+5 silly config load:file:C:\Users\HUAWEI\.npmrc
+6 silly config load:file:C:\Users\HUAWEI\AppData\Local\npm-global\etc\npmrc
+7 verbose title npm run build:base
+8 verbose argv "run" "build:base"
+9 verbose logfile logs-max:10 dir:d:\GitHub\atpoint\.npm-cache\_logs\2026-09-28T03_31_30_983Z-
+10 verbose logfile d:\GitHub\atpoint\.npm-cache\_logs\2026-09-28T03_31_30_983Z-debug-0.log
+11 silly logfile done cleaning log files
+12 http fetch GET 200 https://registry.npmjs.org/npm 1398ms
+13 verbose cwd D:\GitHub\atpoint
+14 verbose os Windows_NT 10.0.26200
+15 verbose node v24.16.0
+16 verbose npm  v11.13.0
+17 notice
+17 notice New [31mmajor[39m version of npm available! [31m11.13.0[39m -> [34m12.1.0[39m
+17 notice Changelog: [34mhttps://github.com/npm/cli/releases/tag/v12.1.0[39m
+17 notice To update run: [4mnpm install -g npm@12.1.0[24m
+17 notice  { force: true, Symbol(proc-log.meta): true }
+18 verbose exit 1
+19 verbose code 1
