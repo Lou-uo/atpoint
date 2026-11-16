@@ -29,7 +29,7 @@ const headings = [
   </p>
 
   <p>Here is my academic CV, feel free to download it.</p>
-  <Button title='Download Resume' class='w-fit' href='/cv.pdf' target='_blank'>
+  <Button title='Download CV' class='w-fit' href='/cv.pdf' target='_blank'>
     <Icon class='size-5' name='download' slot='before' />
   </Button>
   <h2 id='research-interests'>
@@ -39,12 +39,22 @@ const headings = [
     {
       [
         {
-          title: 'Personal Agent',
+          title: 'Agent Memory',
           description: 'Research the deployment and optimization of Agent applications in the field of personalized memory.',
-          icon: 'ros'
+          icon: 'langchain'
+        },
+        {
+          title: 'Agent Compression',
+          description: 'Study how to compress the trajectory of Agent.',
+          icon: 'pytorch'
+        },
+        {
+          title: 'Physical Simulation',
+          description: 'Learn to construct Physical Simulation Based on MuJoCo.',
+          icon: 'openaigym'
         }
         // {
-        //   title: '研究方向 2',
+        //   title: '研究方向 3',
         //   description: '关于该研究方向的详细描述，包括关键词等。',
         //   icon: 'pytorch'
         // }
@@ -71,39 +81,61 @@ const headings = [
   <h2 id='publications'>Publications<a class='anchor' href='#publications'>#</a></h2>
   <PublicationSection
     publications={[
+    //   {
+    //     title:
+    //       'ESN Anomaly Detection',
+    //     authors: [
+    //       { name: 'XX', isEqual: true }
+    //     ],
+    //     venue: 'XX',
+    //     year: '2026',
+    //     type: 'journal',
+    //     abstract:
+    //       '…………',
+    //     links: [
+    //       { type: 'github', href: 'https://github.com/Lou-uo/ESN-for-Anomaly-Dectection', label: 'Code' }
+    //     ],
+    //     status: 'writing'
+    //   },
       {
         title:
-          'ESN Anomaly Detection',
+          'Who Schedules Agent Memory? A Sidecar Approach to Long-Horizon Tasks',
         authors: [
-          { name: 'XX', isEqual: true }
+          { name: 'Qijia Zhuang', isEqual: true },
+          { name: 'Rui Liu', isEqual: true, isMe: true },
+          { name: 'Yuxiang Ren' }
         ],
-        venue: 'XX',
+        venue: 'arxiv Preprint',
         year: '2026',
-        type: 'journal',
+        type: 'preprint',
         abstract:
-          '…………',
+          'As large language model agents increasingly undertake complex, long-horizon tasks, memory has become an important component for supporting sustained decision-making and action. Existing methods primarily focus on memory storage, updating, and retrieval, but often overlook how memory scheduling affects task execution: the main agent must identify memory needs, initiate retrieval, and wait for results while advancing the task, increasing both scheduling burden and execution time. To address this problem, we propose MemSidecar, which decouples memory scheduling from task execution through two independently selectable modes. Hooks directly delivers bound memory to the main agent when execution events match predefined conditions. Foresight uses an independent agent to predict potential queries, retrieve results in parallel, and store them in a cache, delivering matching and valid results when actual requests arrive. Hooks and Foresight achieve scores of 41.23% and 44.34% on MCP-Persona, respectively, while effectively reducing execution costs and latency and improving the efficiency of long-horizon agent execution.',
         links: [
-          { type: 'github', href: 'https://github.com/Lou-uo/ESN-for-Anomaly-Dectection', label: 'Code' }
+        //   { type: 'website', href: '#' },
+          { type: 'arxiv', href: 'https://arxiv.org/abs/2611.00779' }
+        //   { type: 'github', href: '#', label: 'Code' }
         ],
-        status: 'writing'
+        status: 'preprint'
       },
       {
         title:
-          'Personalized Trajectory Preference Optimization (PTPO)',
+          'Rethinking Agent Trajectory Compression: A Workflow-Aware Perspective',
         authors: [
-          { name: 'XX', isEqual: true }
+          { name: 'Qijia Zhuang', isEqual: true },
+          { name: 'Rui Liu', isEqual: true, isMe: true },
+          { name: 'Yuxiang Ren' }
         ],
-        venue: 'XX',
+        venue: 'arxiv Preprint',
         year: '2026',
-        type: 'conference',
+        type: 'preprint',
         abstract:
-          '…………',
+          'As long-horizon agents increasingly rely on multi-step tool interactions to accomplish complex tasks, their execution trajectories continuously accumulate structured outputs and intermediate artifacts, leading to growing context overhead. Existing compression methods primarily rely on text importance or fixed truncation rules, often overlooking cross-step dependencies within workflows and potentially discarding critical information required for subsequent task execution. To address this challenge, we propose WAAC, a workflow-aware framework for agent trajectory compression. WAAC structurally models successful historical trajectories to extract reusable workflow compression experience and incorporates online backward dependency analysis to dynamically identify information retention requirements. By combining current dependency constraints with historical experience, WAAC selects appropriate compression strategies for different types of historical information. Experiments on PinchBench and Odysseys demonstrate that WAAC achieves an overall score of 87.6 and a perfect completion rate of 19.0%, respectively, while reducing execution costs by 19.7% and 29.1% compared with the strongest baseline methods. These results demonstrate the effectiveness of workflow-aware trajectory compression in improving task performance and cost efficiency for long-horizon agents.',
         links: [
-          { type: 'website', href: '#' },
-          { type: 'arxiv', href: '#' },
-          { type: 'github', href: '#', label: 'Code' }
+        //   { type: 'website', href: '#' },
+          { type: 'arxiv', href: 'https://arxiv.org/abs/2611.08865' },
+          { type: 'github', href: 'https://anonymous.4open.science/r/waac-6527/README.md', label: 'Code' }
         ],
-        status: 'writing'
+        status: 'preprint'
       }
     ]}
   />
