@@ -82,7 +82,7 @@ export const theme: ThemeUserConfig = {
     /** Your email address */
     email: 'liurui@mails.neu.edu.cn',
     /** Your Google Scholar profile URL */
-    googleScholar: '',
+    googleScholar: 'https://scholar.google.com/citations?user=kxiq8ekAAAAJ&hl=zh-CN',
     /** Blog start date for statistics */
     blogStartDate: '2026-04-30',
     /** Domain configuration */
